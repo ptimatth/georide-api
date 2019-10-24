@@ -1,0 +1,10 @@
+{
+  "domain": "georide",
+  "name": "Georide",
+  "config_flow": true,
+  "documentation": "https://georide.fr",
+  "dependencies": [
+    "urllib3"
+  ],
+  "codeowners": []
+}
