@@ -3,10 +3,17 @@ Georide api lib
 @author Matthieu DUVAL <matthieu@duval-dev.fr>
 """
 
-import urllib3
 import json
+import urllib3
 
-from objects import GeorideTracker, GeorideAccount, GeorideUser, GeorideTrackerTrip, GeorideTrackerPosition, GeorideSharedTrip
+from georideapilib.objects import (
+    GeorideTracker, 
+    GeorideAccount, 
+    GeorideUser,  
+    GeorideTrackerTrip,  
+    GeorideTrackerPosition, 
+    GeorideSharedTrip
+)
 
 GEORIDE_API_HOST = "https://api.georide.fr"
 GEORIDE_API_ENDPOINT_LOGIN = "/user/login"
@@ -22,9 +29,10 @@ GEORIDE_API_ENDPOINT_POSITIONS = "/tracker/:trackerId/trips/positions"
 GEORIDE_API_ENDPOINT_TRIP_SHARE = "/tracker/:trackerId/share/trip"
 
 
-def getAuthorisationToken(email, password):
+def get_authorisation_token(email, password):
+    """ return an authorization token """
     http = urllib3.PoolManager()
-    data = {"email": email,"password": password}
+    data = {"email": email, "password": password}
     encoded_data = json.dumps(data).encode('utf-8')
     response = http.request(
         'POST', 
@@ -32,11 +40,12 @@ def getAuthorisationToken(email, password):
         body=encoded_data,
         headers={'Content-Type': 'application/json'})
     response_data = json.loads(response.data.decode('utf-8'))
-    account = GeorideAccount.fromJson(response_data)
+    account = GeorideAccount.from_json(response_data)
     return account
 
 
-def renewToken(token):
+def renew_token(token):
+    """ renew the authorization token """
     http = urllib3.PoolManager()
     headers = {"Authorization": "Bearer " + token}
     response = http.request(
@@ -44,24 +53,25 @@ def renewToken(token):
         GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_NEW_TOKEN,
         headers=headers)
     response_data = json.loads(response.data.decode('utf-8'))
-    newToken = response_data['authToken']
-    return newToken
+    new_token = response_data['authToken']
+    return new_token
 
 
-def revokeToken(token):
+def revoke_token(token):
+    """ invalidate the authorization token """
     http = urllib3.PoolManager()
     headers = {"Authorization": "Bearer " + token}
     response = http.request(
         'POST', 
         GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_LOGOUT,
         headers=headers)
-    if response.status == 204:
-        return True
-    else:
+    if response.status != 204:
         return False
+    return True
 
 
-def getUser(token):
+def get_user(token):
+    """ get the georide user info """
     http = urllib3.PoolManager()
     headers = {"Authorization": "Bearer " + token}
     response = http.request(
@@ -69,10 +79,11 @@ def getUser(token):
         GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_USER,
         headers=headers)
     response_data = json.loads(response.data.decode('utf-8'))
-    account = GeorideUser.fromJson(response_data)
+    account = GeorideUser.from_json(response_data)
     return account  
 
-def getTrackers(token):
+def get_trackers(token):
+    """ get user trackers """
     http = urllib3.PoolManager()
     headers = {"Authorization": "Bearer " + token}
     response = http.request(
@@ -83,57 +94,64 @@ def getTrackers(token):
     response_data = json.loads(response.data.decode('utf-8'))
     trackers = []
     for json_tracker in response_data:
-        trackers.append(GeorideTracker.fromJson(json_tracker))
+        trackers.append(GeorideTracker.from_json(json_tracker))
     return trackers
 
 
-def getTrips(token, trackerId, fromDate, toDate):
+def get_trips(token, tracker_id, from_date, to_date):
+    """ return all trips between two dates """
     http = urllib3.PoolManager()
     headers = {"Authorization": "Bearer " + token}
     response = http.request(
         'GET', 
-        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_TRIPS.replace(':trackerId', str(trackerId)),
-        fields={'from': fromDate, 'to': toDate},
+        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_TRIPS.replace(':trackerId', str(tracker_id)),
+        fields={'from': from_date, 'to': to_date},
         headers=headers)
 
     response_data = json.loads(response.data.decode('utf-8'))
     trips = []
     for json_trip in response_data:
-        trips.append(GeorideTrackerTrip.fromJson(json_trip))
+        trips.append(GeorideTrackerTrip.from_json(json_trip))
     return trips
 
-def getPositions(token, trackerId, fromDate, toDate):
+def get_positions(token, tracker_id, from_date, to_date):
+    """ return all trips between two dates """
     http = urllib3.PoolManager()
     headers = {"Authorization": "Bearer " + token}
     response = http.request(
         'GET', 
-        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_POSITIONS.replace(':trackerId', str(trackerId)),
-        fields={'from': fromDate, 'to': toDate},
+        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_POSITIONS.replace(':trackerId', str(tracker_id)),
+        fields={'from': from_date, 'to': to_date},
         headers=headers)
 
     response_data = json.loads(response.data.decode('utf-8'))
     positions = []
     for json_position in response_data:
-        positions.append(GeorideTrackerPosition.fromJson(json_position))
+        positions.append(GeorideTrackerPosition.from_json(json_position))
     return positions
 
-def shareATripByTripId(token, trackerId, tripId):
-    return _shareATrip(token, trackerId, tripId=tripId)
+def share_a_trip_by_trip_id(token, tracker_id, trip_id):
+    """ share trip by trip id """
+    return _share_a_trip(token, tracker_id, trip_id=trip_id)
 
-def shareATripByDate(token, trackerId, fromDate, toDate):
-    return _shareATrip(token, trackerId, fromDate=fromDate, toDate=toDate)
+def share_a_trip_by_date(token, tracker_id, from_date, to_date):
+    """ share trips between two dates """
+    return _share_a_trip(token, tracker_id, from_date=from_date, to_date=to_date)
 
-def shareATripByTripMergeId(token, trackerId, tripMergedId):
-    return _shareATrip(token, trackerId, tripMergedId=tripMergedId)
+def share_a_trip_by_trip_merge_id(token, tracker_id, trip_merged_id):
+    """ share trip by trip merged id """
+    return _share_a_trip(token, tracker_id, trip_merged_id=trip_merged_id)
 
-def _shareATrip(token, trackerId, tripId=None, fromDate=None, toDate=None, tripMergedId=None):
+def _share_a_trip(token, tracker_id, trip_id=None, from_date=None, # pylint: disable= R0913
+                  to_date=None, trip_merged_id=None): 
+    """ share trip by trib_id or between two dates or trip_merged_id """
     data = None
-    if tripId != None:
-        data = {"tripId": tripId}
-    elif fromDate != None and toDate != None:
-        data = {"from": fromDate, "to": toDate}
-    elif tripMergedId != None:
-        data = {"tripMergedId": tripMergedId}
+    if trip_id is not None:
+        data = {"tripId": trip_id}
+    elif from_date is not None and to_date is not None:
+        data = {"from": from_date, "to": to_date}
+    elif trip_merged_id is not None:
+        data = {"tripMergedId": trip_merged_id}
 
     encoded_data = json.dumps(data).encode('utf-8')
     print("Trip data: ", encoded_data)
@@ -145,48 +163,48 @@ def _shareATrip(token, trackerId, tripId=None, fromDate=None, toDate=None, tripM
     }
     response = http.request(
         'POST', 
-        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_TRIP_SHARE.replace(':trackerId', str(trackerId)),
+        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_TRIP_SHARE.replace(':trackerId', str(tracker_id)),
         body=encoded_data,
         headers=headers)
 
     response_data = json.loads(response.data.decode('utf-8'))
     print("Trip data: ", response_data)
-    return GeorideSharedTrip.fromJson(response_data)
+    return GeorideSharedTrip.from_json(response_data)
 
-def lockTracker(token, trackerId):
+def lock_tracker(token, tracker_id):
+    """ used to lock a tracker """
     http = urllib3.PoolManager()
     headers = {"Authorization": "Bearer " + token}
     response = http.request(
         'POST', 
-        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_LOCK.replace(':trackerId', str(trackerId)),
+        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_LOCK.replace(':trackerId', str(tracker_id)),
         headers=headers)
-    if response.status == 204:
-        return True
-    else:
+    if response.status != 204:
         return False
+    return True
 
-def unlockTracker(token, trackerId):
+def unlock_tracker(token, tracker_id):
+    """ used to unlock a tracker """
     http = urllib3.PoolManager()
     headers = {"Authorization": "Bearer " + token}
     response = http.request(
         'POST', 
-        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_UNCLOCK.replace(':trackerId', str(trackerId)),
+        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_UNLOCK.replace(':trackerId', str(tracker_id)),
         headers=headers)
-    if response.status == 204:
-        return True
-    else:
+    if response.status != 204:
         return False
+    return True
 
-def toogleLockTracker(token, trackerId):
+def toogle_lock_tracker(token, tracker_id):
+    """ used to toggle lock a tracker """
     http = urllib3.PoolManager()
     headers = {"Authorization": "Bearer " + token}
     response = http.request(
         'POST', 
-        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_TOGGLE_LOCK.replace(':trackerId', str(trackerId)),
+        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_TOGGLE_LOCK.replace(':trackerId', str(tracker_id)),
         headers=headers)
     response_data = json.loads(response.data.decode('utf-8'))
     return response_data['locked']
 
 if __name__ == '__main__':
     print("Not a main module")
-

@@ -4,501 +4,595 @@ Georide objects implementation
 """
 
 class GeorideSharedTrip:
-	def __init__(self, url, shareId):
-		self._url = url
-		self._shareId = shareId
+    """ Shared trip object representation """
+    def __init__(self, url, shareId):
+        self._url = url
+        self._share_id = shareId
 
-	@property
-	def url(self):
-		return self._url
-	
-	@property
-	def shareId(self):
-		return self._shareId
+    @property
+    def url(self):
+        """ shared trip url """
+        return self._url
+    
+    @property
+    def share_id(self):
+        """ shared trip id """
+        return self._share_id
 
-	def fromJson(json):
-		return GeorideSharedTrip(
-				json['url'],
-				json['shareId']
-			)
+    @staticmethod
+    def from_json(json):
+        """return new object fromjson"""
+        return GeorideSharedTrip(
+            json['url'],
+            json['shareId']
+        )
 
-class GeorideTrackerTrip:
-	def __init__(self, tripId, trackerId, averageSpeed, maxSpeed, distance, duration, startAddress, niceStartAddress, startLat,
-	 startLon, endAddress, niceEndAddress, endLat, endLon, startTime, endTime):
-		self._tripId = tripId
-		self._trackerId = trackerId
-		self._averageSpeed = averageSpeed
-		self._maxSpeed = maxSpeed
-		self._distance = distance
-		self._duration = duration
-		self._startAddress = startAddress
-		self._niceStartAddress = niceStartAddress
-		self._startLat = startLat
-		self._startLon = startLon
-		self._endAddress = endAddress
-		self._niceEndAddress = niceEndAddress
-		self._endLat = endLat
-		self._endLon = endLon
-		self._startTime = startTime
-		self._endTime = endTime
-	
-	@property
-	def tripId(self):
-		return self._tripId
-	
-	@property
-	def trackerId(self):
-		return self._trackerId
-	
-	@property
-	def averageSpeed(self):
-		return self._averageSpeed
-	
-	@property
-	def maxSpeed(self):
-		return self._maxSpeed
-	
-	@property
-	def distance(self):
-		return self._distance
-	
-	@property
-	def duration(self):
-		return self._duration
-	
-	@property
-	def startAddress(self):
-		return self._startAddress
-	
-	@property
-	def niceStartAddress(self):
-		return self._niceStartAddress
-	
-	@property
-	def startLat(self):
-		return self._startLat
-	
-	@property
-	def startLon(self):
-		return self._startLon
-	
-	@property
-	def endAddress(self):
-		return self._endAddress
-	
-	@property
-	def niceEndAddress(self):
-		return self._niceEndAddress
-	
-	@property
-	def endLat(self):
-		return self._endLat
-	
-	@property
-	def endLon(self):
-		return self._endLon
-	
-	@property
-	def startTime(self):
-		return self._startTime
-	
-	@property
-	def endTime(self):
-		return self._endTime
+class GeorideTrackerTrip:  # pylint: disable=too-many-instance-attributes
+    """ Trip object representation """
+    def __init__(self, trip_id, tracker_id, average_speed, max_speed, distance, duration, # pylint: disable=R0914, R0913
+                 start_address, nice_start_address, start_lat, start_lon, end_address,
+                 nice_end_address, end_lat, end_lon, start_time, end_time): 
+        self._trip_id = trip_id
+        self._tracker_id = tracker_id
+        self._average_speed = average_speed
+        self._max_speed = max_speed
+        self._distance = distance
+        self._duration = duration
+        self._start_address = start_address
+        self._nice_start_address = nice_start_address
+        self._start_lat = start_lat
+        self._start_lon = start_lon
+        self._end_address = end_address
+        self._nice_end_address = nice_end_address
+        self._end_lat = end_lat
+        self._end_lon = end_lon
+        self._start_time = start_time
+        self._end_time = end_time
+    
+    
+    @property
+    def trip_id(self):
+        """trip_id  """
+        return self._trip_id
+    
+    @property
+    def tracker_id(self):
+        """ tracker_id """
+        return self._tracker_id
+    
+    @property
+    def average_speed(self):
+        """ average_speed """
+        return self._average_speed
+    
+    @property
+    def max_speed(self):
+        """ max_speed """
+        return self._max_speed
+    
+    @property
+    def distance(self):
+        """ distance """
+        return self._distance
+    
+    @property
+    def duration(self):
+        """ duration """
+        return self._duration
+    
+    @property
+    def start_address(self):
+        """ start_address """
+        return self._start_address
+    
+    @property
+    def nice_start_address(self):
+        """ nice_start_address """
+        return self._nice_start_address
+    
+    @property
+    def start_lat(self):
+        """ start_lat """
+        return self._start_lat
+    
+    @property
+    def start_lon(self):
+        """ start_lon """
+        return self._start_lon
+    
+    @property
+    def end_address(self):
+        """ end_address """
+        return self._end_address
+    
+    @property
+    def nice_end_address(self):
+        """ nice_end_address """
+        return self._nice_end_address
+    
+    @property
+    def end_lat(self):
+        """end_lat  """
+        return self._end_lat
+    
+    @property
+    def end_lon(self):
+        """end_lon  """
+        return self._end_lon
+    
+    @property
+    def start_time(self):
+        """ start_time """
+        return self._start_time
+    
+    @property
+    def end_time(self):
+        """ end_time """
+        return self._end_time
 
-	def fromJson(json):
-		return GeorideTrackerTrip(
-			json['id'],
-			json['trackerId'],
-			json['averageSpeed'],
-			json['maxSpeed'],
-			json['distance'],
-			json['duration'],
-			json['startAddress'],
-			json['niceStartAddress'],
-			json['startLat'],
-			json['startLon'],
-			json['endAddress'],
-			json['niceEndAddress'],
-			json['endLat'],
-			json['endLon'],
-			json['startTime'],
-			json['endTime']
-		)
+    
+    @staticmethod
+    def from_json(json):
+        """return new object from json"""
+        return GeorideTrackerTrip(
+            json['id'],
+            json['trackerId'],
+            json['averageSpeed'],
+            json['maxSpeed'],
+            json['distance'],
+            json['duration'],
+            json['startAddress'],
+            json['niceStartAddress'],
+            json['startLat'],
+            json['startLon'],
+            json['endAddress'],
+            json['niceEndAddress'],
+            json['endLat'],
+            json['endLon'],
+            json['startTime'],
+            json['endTime']
+        )
 
 
 class GeorideTrackerPosition:
-	def __init__(self, fixtime, latitude, longitude, altitude, speed, address):
-		self._fixtime = fixtime
-		self._latitude = latitude
-		self._longitude = longitude
-		self._altitude = altitude
-		self._speed = speed
-		self._address = address
+    """ Tracker position object representation """
+    def __init__(self, fixtime, latitude, longitude, altitude, speed, address): # pylint: disable= R0913
+        self._fixtime = fixtime
+        self._latitude = latitude
+        self._longitude = longitude
+        self._altitude = altitude
+        self._speed = speed
+        self._address = address
 
-	@property
-	def fixtime(self):
-		return self._fixtime
+    @property
+    def fixtime(self):
+        """ fixtime """
+        return self._fixtime
 
-	@property
-	def latitude(self):
-		return self._latitude
+    @property
+    def latitude(self):
+        """ latitude """
+        return self._latitude
 
-	@property
-	def longitude(self):
-		return self._longitude
+    @property
+    def longitude(self):
+        """ longitude """
+        return self._longitude
 
-	@property
-	def altitude(self):
-		return self._altitude
+    @property
+    def altitude(self):
+        """ altitude """
+        return self._altitude
 
-	@property
-	def speed(self):
-		return self._speed
+    @property
+    def speed(self):
+        """ speed (m/s) """
+        return self._speed
 
-	@property
-	def address(self):
-		return self._address
+    @property
+    def address(self):
+        """ address """
+        return self._address
 
-	def fromJson(json):
-		return GeorideTrackerPosition(
-				json['fixtime'],
-				json['latitude'],
-				json['longitude'],
-				json['altitude'],
-				json['speed'],
-				json['address']
-			)
+    @staticmethod
+    def from_json(json):
+        """return new object fromjson"""
+        return GeorideTrackerPosition(
+            json['fixtime'],
+            json['latitude'],
+            json['longitude'],
+            json['altitude'],
+            json['speed'],
+            json['address']
+        )
 
 
 
 
-class GeorideTracker:
-	def __init__(self, trackerId, trackerName, deviceButtonAction, deviceButtonDelay, vibrationLevel, isOldTracker, autoLockFreezedTo, 
-			fixtime, role, lastPaymentDate, giftCardId, expires, activationDate, odometer, isStolen, isCrashed,	crashDetectionDisabled,
-			speed, moving, positionId,  latitude, longitude, altitude, lockedPositionId, lockedLatitude, lockedLongitude, isLocked,
-			canSeePosition, canLock, canUnlock, canShare, canUnshare, canCheckSpeed, canSeeStatistics, canSendBrokenDownSignal,
-			canSendStolenSignal, status):
-		self._trackerId =				trackerId
-		self._trackerName =				trackerName
-		self._deviceButtonAction =		deviceButtonAction
-		self._deviceButtonDelay =		deviceButtonDelay
-		self._vibrationLevel =			vibrationLevel
-		self._isOldTracker =			isOldTracker
-		self._autoLockFreezedTo =		autoLockFreezedTo
-		self._fixtime =					fixtime
-		self._role =					role
-		self._lastPaymentDate =			lastPaymentDate
-		self._giftCardId =				giftCardId
-		self._expires =					expires
-		self._activationDate =			activationDate
-		self._odometer =				odometer
-		self._isStolen =				isStolen
-		self._isCrashed =				isCrashed
-		self._crashDetectionDisabled =	crashDetectionDisabled
-		self._speed =					speed
-		self._moving =					moving
-		self._positionId =				positionId
-		self._latitude =				latitude
-		self._longitude =				longitude
-		self._altitude =				altitude
-		self._lockedPositionId =		lockedPositionId
-		self._lockedLatitude =			lockedLatitude
-		self._lockedLongitude =			lockedLongitude
-		self._isLocked =				isLocked
-		self._canSeePosition =			canSeePosition
-		self._canLock =					canLock
-		self._canUnlock =				canUnlock
-		self._canShare =				canShare
-		self._canUnshare =				canUnshare
-		self._canCheckSpeed =			canCheckSpeed
-		self._canSeeStatistics =		canSeeStatistics
-		self._canSendBrokenDownSignal =	canSendBrokenDownSignal
-		self._canSendStolenSignal =		canSendStolenSignal
-		self._status = 					status
+class GeorideTracker: # pylint: disable=R0904,R0902
+    """ Tracker position object representation """
+    def __init__(self, tracker_id, tracker_name, device_button_action, device_button_delay, # pylint: disable= R0913, R0914, R0915
+                 vibration_level, is_old_tracker, auto_lock_freezed_to, fixtime, role,
+                 last_payment_date, gift_card_id, expires, activation_date, odometer, is_stolen,
+                 is_crashed, crash_detection_disabled, speed, moving, position_id, latitude, 
+                 longitude, altitude, locked_position_id, locked_latitude, locked_longitude,
+                 is_locked, can_see_position, can_lock, can_unlock, can_share, can_unshare,
+                 can_check_speed, can_see_statistics, can_send_broken_down_signal,
+                 can_send_stolen_signal, status):
+        self._tracker_id = tracker_id
+        self._tracker_name = tracker_name
+        self._device_button_action = device_button_action
+        self._device_button_delay = device_button_delay
+        self._vibration_level = vibration_level
+        self._is_old_tracker = is_old_tracker
+        self._auto_lock_freezed_to = auto_lock_freezed_to
+        self._fixtime = fixtime
+        self._role = role
+        self._last_payment_date = last_payment_date
+        self._gift_card_id = gift_card_id 
+        self._expires = expires
+        self._activation_date = activation_date
+        self._odometer = odometer
+        self._is_stolen = is_stolen
+        self._is_crashed = is_crashed
+        self._crash_detection_disabled = crash_detection_disabled
+        self._speed = speed
+        self._moving = moving
+        self._position_id = position_id
+        self._latitude = latitude
+        self._longitude = longitude
+        self._altitude = altitude
+        self._locked_position_id = locked_position_id
+        self._locked_latitude = locked_latitude
+        self._locked_longitude = locked_longitude
+        self._is_locked = is_locked
+        self._can_see_position = can_see_position
+        self._can_lock = can_lock
+        self._can_unlock = can_unlock
+        self._can_share = can_share
+        self._can_unshare = can_unshare
+        self._can_check_speed = can_check_speed
+        self._can_see_statistics = can_see_statistics
+        self._can_send_broken_down_signal = can_send_broken_down_signal
+        self._can_send_stolen_signal = can_send_stolen_signal
+        self._status = status
 
-	@property
-	def trackerId(self):
-		return self._trackerId
+    @property
+    def tracker_id(self):
+        """ tracker_id """
+        return self._tracker_id
+    
+    @property
+    def tracker_name(self):
+        """ tracker_name """
+        return self._tracker_name
+    
+    @property
+    def device_button_action(self):
+        """ device_button_action """
+        return self._device_button_action
+    
+    @property
+    def device_button_delay(self):
+        """ device_button_delay """
+        return self._device_button_delay
+    
+    @property
+    def vibration_level(self):
+        """ vibration_level """
+        return self._vibration_level
+    
+    @property
+    def is_old_tracker(self):
+        """ is_old_tracker """
+        return self._is_old_tracker
+    
+    @property
+    def auto_lock_freezed_to(self):
+        """ auto_lock_freezed_to """
+        return self._auto_lock_freezed_to
+    
+    @property
+    def fixtime(self):
+        """ fixtime """
+        return self._fixtime
+    
+    @property
+    def role(self):
+        """ role """
+        return self._role
+    
+    @property
+    def last_payment_date(self):
+        """ last_payment_date """
+        return self._last_payment_date
+    
+    @property
+    def gift_card_id(self):
+        """ gift_card_id """
+        return self._gift_card_id
+    
+    @property
+    def expires(self):
+        """ expires """
+        return self._expires
+    
+    @property
+    def activation_date(self):
+        """ activation_date """
+        return self._activation_date
+    
+    @property
+    def odometer(self):
+        """ odometer """
+        return self._odometer
+    
+    @property
+    def is_stolen(self):
+        """ is_stolen """
+        return self._is_stolen
+    
+    @property
+    def is_crashed(self):
+        """ is_crashed """
+        return self._is_crashed
+    
+    @property
+    def crash_detection_disabled(self):
+        """ crash_detection_disabled """
+        return self._crash_detection_disabled
+    
+    @property
+    def speed(self):
+        """ speed """
+        return self._speed
+    
+    @property
+    def moving(self):
+        """ moving """
+        return self._moving
+    
+    @property
+    def position_id(self):
+        """ position_id """
+        return self._position_id
+    
+    @property
+    def latitude(self):
+        """ latitude """
+        return self._latitude
+    
+    @property
+    def longitude(self):
+        """ longitude """
+        return self._longitude
+    
+    @property
+    def altitude(self):
+        """ altitude """
+        return self._altitude
+    
+    @property
+    def locked_position_id(self):
+        """ locked_position_id """
+        return self._locked_position_id
+    
+    @property
+    def locked_latitude(self):
+        """ locked_latitude """
+        return self._locked_latitude
+    
+    @property
+    def locked_longitude(self):
+        """ locked_longitude """
+        return self._locked_longitude
+    
+    @property
+    def is_locked(self):
+        """ is_locked """
+        return self._is_locked
+    
+    @property
+    def can_see_position(self):
+        """ can_see_position """
+        return self._can_see_position
+    
+    @property
+    def can_lock(self):
+        """ can_lock """
+        return self._can_lock
+    
+    @property
+    def can_unlock(self):
+        """ can_unlock """
+        return self._can_unlock
+    
+    @property
+    def can_share(self):
+        """ can_share """
+        return self._can_share
+    
+    @property
+    def can_unshare(self):
+        """ can_unshare """
+        return self._can_unshare
+    
+    @property
+    def can_check_speed(self):
+        """ can_check_speed """
+        return self._can_check_speed
+    
+    @property
+    def can_see_statistics(self):
+        """ can_see_statistics """
+        return self._can_see_statistics
+    
+    @property
+    def can_send_broken_down_signal(self):
+        """ can_send_broken_down_signal """
+        return self._can_send_broken_down_signal
+    
+    @property
+    def can_send_stolen_signal(self):
+        """ can_send_stolen_signal """
+        return self._can_send_stolen_signal
+    
+    @property
+    def status(self):
+        """ status """
+        return self._status
 
-	@property
-	def trackerName(self):
-		return self._trackerName
-
-	@property
-	def deviceButtonAction(self):
-		return self._deviceButtonAction
-	
-	@property
-	def deviceButtonDelay(self):
-		return self._deviceButtonDelay
-	
-	@property
-	def vibrationLevel(self):
-		return self._vibrationLevel
-	
-	@property
-	def isOldTracker(self):
-		return self._isOldTracker
-	
-	@property
-	def autoLockFreesedTo(self):
-		return self._autoLockFreesedTo
-
-	@property
-	def fixtime(self):
-		return self._fixtime
-	
-	@property
-	def role(self):
-		return self._role
-	
-	@property
-	def lastPayementDate(self):
-		return self._lastPayementDate
-	
-	@property
-	def giftCardId(self):
-		return self._giftCardId
-	
-	@property
-	def expires(self):
-		return self._expires
-
-	@property
-	def activationDate(self):
-		return self._activationDate
-
-	@property
-	def odometer(self):
-		return self._odometer
-
-	@property
-	def isStolen(self):
-		return self._isStolen
-
-	@property
-	def isCrashed(self):
-		return self._isCrashed
-
-	@property
-	def crashDetectionDisabled(self):
-		return self._crashDetectionDisabled
-
-	@property
-	def speed(self):
-		return self._speed
-
-	@property
-	def moving(self):
-		return self._moving
-
-	@property
-	def positionId(self):
-		return self._positionId
-
-	@property
-	def latitude(self):
-		return self._latitude
-
-	@property
-	def longitude(self):
-		return self._longitude
-
-	@property
-	def altitude(self):
-		return self._altitude
-
-	@property
-	def lockedPositionId(self):
-		return self._lockedPositionId
-
-	@property
-	def lockedLatitude(self):
-		return self._lockedLatitude
-
-	@property
-	def lockedLongitude(self):
-		return self._lockedLongitude
-
-	@property
-	def isLocked(self):
-		return self._isLocked
-
-	@property
-	def canSeePosition(self):
-		return self._canSeePosition
-
-	@property
-	def canLock(self):
-		return self._canLock
-
-	@property
-	def canUnlock(self):
-		return self._canUnlock
-
-	@property
-	def canShare(self):
-		return self._canShare
-
-	@property
-	def canUnshare(self):
-		return self._canUnshare
-
-	@property
-	def canCheckSpeed(self):
-		return self._canCheckSpeed
-
-	@property
-	def canSeeStatistics(self):
-		return self._canSeeStatistics
-
-	@property
-	def canSendBrokenDownSignal(self):
-		return self._canSendBrokenDownSignal
-
-	@property
-	def canSendStolenSignal(self):
-		return self._canSendStolenSignal
-
-	@property
-	def status(self):
-		return self._status
-
-	def fromJson(json):
-		return GeorideTracker(
-			json['trackerId'],
-			json['trackerName'],
-			json['deviceButtonAction'],
-			json['deviceButtonDelay'],
-			json['vibrationLevel'],
-			json['isOldTracker'],
-			json['autoLockFreezedTo'],
-			json['fixtime'],
-			json['role'],
-			json['lastPaymentDate'],
-			json['giftCardId'],
-			json['expires'],
-			json['activationDate'],
-			json['odometer'],
-			json['isStolen'],
-			json['isCrashed'],
-			json['crashDetectionDisabled'],
-			json['speed'],
-			json['moving'],
-			json['positionId'],
-			json['latitude'],
-			json['longitude'],
-			json['altitude'],
-			json['lockedPositionId'],
-			json['lockedLatitude'],
-			json['lockedLongitude'],
-			json['isLocked'],
-			json['canSeePosition'],
-			json['canLock'],
-			json['canUnlock'],
-			json['canShare'],
-			json['canUnshare'],
-			json['canCheckSpeed'],
-			json['canSeeStatistics'],
-			json['canSendBrokenDownSignal'],
-			json['canSendStolenSignal'],
-			json['status']
-		)
+    @staticmethod
+    def from_json(json):
+        """return new object fromjson"""
+        return GeorideTracker(
+            json['trackerId'],
+            json['trackerName'],
+            json['deviceButtonAction'],
+            json['deviceButtonDelay'],
+            json['vibrationLevel'],
+            json['isOldTracker'],
+            json['autoLockFreezedTo'],
+            json['fixtime'],
+            json['role'],
+            json['lastPaymentDate'],
+            json['giftCardId'],
+            json['expires'],
+            json['activationDate'],
+            json['odometer'],
+            json['isStolen'],
+            json['isCrashed'],
+            json['crashDetectionDisabled'],
+            json['speed'],
+            json['moving'],
+            json['positionId'],
+            json['latitude'],
+            json['longitude'],
+            json['altitude'],
+            json['lockedPositionId'],
+            json['lockedLatitude'],
+            json['lockedLongitude'],
+            json['isLocked'],
+            json['canSeePosition'],
+            json['canLock'],
+            json['canUnlock'],
+            json['canShare'],
+            json['canUnshare'],
+            json['canCheckSpeed'],
+            json['canSeeStatistics'],
+            json['canSendBrokenDownSignal'],
+            json['canSendStolenSignal'],
+            json['status']
+        )
 
 
 class GeorideAccount:
-	def __init__(self, account_id, email, isAdmin, authToken):
-		self._account_id = account_id
-		self._email = email
-		self._isAdmin = isAdmin
-		self._authToken = authToken
+    """ Account object representation """ 
+    def __init__(self, account_id, email, is_admin, auth_token):
+        self._account_id = account_id
+        self._email = email
+        self._is_admin = is_admin
+        self._auth_token = auth_token
 
-	@property
-	def account_id(self):
-		return self._account_id
+    @property
+    def account_id(self):
+        """ account_id """
+        return self._account_id
 
-	@property
-	def email(self):
-		return self._email
+    @property
+    def email(self):
+        """ email """
+        return self._email
 
-	@property
-	def isAdmin(self):
-		return self._isAdmin
+    @property
+    def is_admin(self):
+        """ is_admin """
+        return self._is_admin
 
-	@property
-	def authToken(self):
-		return self._authToken
+    @property
+    def auth_token(self):
+        """ auth_token """
+        return self._auth_token
 
-	@authToken.setter
-	def authToken(self, newToken):
-		self._authToken = newToken
+    @auth_token.setter
+    def auth_token(self, new_token):
+        """ change auth_token """
+        self._auth_token = new_token
 
-	def fromJson(json):
-		return GeorideAccount(
-	        json['id'],
-	        json['email'],
-	        json['isAdmin'],
-	        json['authToken']
+    @staticmethod
+    def from_json(json):
+        """return new object from_json"""
+        return GeorideAccount(
+            json['id'],
+            json['email'],
+            json['isAdmin'],
+            json['authToken']
         )
 
 
-class GeorideUser:
-	def __init__(self, account_id, email, firstName, createdAt,	phoneNumberp, pushUserToken, legal,	dateOfBirth):
-		self._account_id = account_id
-		self._email = email
-		self._firstName = firstName
-		self._createdAt = createdAt
-		self._phoneNumberp = phoneNumberp
-		self._pushUserToken = pushUserToken
-		self._legal = legal
-		self._dateOfBirth = dateOfBirth
+class GeorideUser: # pylint: disable= R0902
+    """ User object representation """ 
+    def __init__(self, user_id, email, first_name, created_at, phone_number, # pylint: disable= R0913
+                 push_user_token, legal, date_of_birth): 
+        self._user_id = user_id
+        self._email = email
+        self._first_name = first_name
+        self._created_at = created_at
+        self._phone_number = phone_number
+        self._push_user_token = push_user_token
+        self._legal = legal
+        self._date_of_birth = date_of_birth
 
-	@property
-	def user_id(self):
-		return self._user_id
+    @property
+    def user_id(self):
+        """ user_id """
+        return self._user_id
 
-	@property
-	def email(self):
-		return self._email
+    @property
+    def email(self):
+        """ email """
+        return self._email
 
-	@property
-	def firstName(self):
-		return self._firstName
+    @property
+    def first_name(self):
+        """ first_name """
+        return self._first_name
 
-	@property
-	def createdAt(self):
-		return self._createdAt
-	
-	@property
-	def phoneNumber(self):
-		return self._phoneNumber
-	
-	@property
-	def pushUserToken(self):
-		return self._pushUserToken
-	
-	@property
-	def legal(self):
-		return self._legal
+    @property
+    def created_at(self):
+        """ created_at """
+        return self._created_at
+    
+    @property
+    def phone_number(self):
+        """ phone_number """
+        return self._phone_number
+    
+    @property
+    def push_user_token(self):
+        """ push_user_token """
+        return self._push_user_token
+    
+    @property
+    def legal(self):
+        """ legal """
+        return self._legal
 
-	@property
-	def dateOfBirth(self):
-		return self._dateOfBirth
+    @property
+    def date_of_birth(self):
+        """ date_ofo_birth """
+        return self._date_of_birth
 
-	def fromJson(json):
-		return GeorideUser(
-	        json['id'],
-	        json['email'],
-	        json['firstName'],
-	        json['createdAt'],
-	        json['phoneNumber'],
-	        json['pushUserToken'],
-	        json['legal'],
-	        json['dateOfBirth']
+    @staticmethod
+    def from_json(json):
+        """return new object fromjson"""
+        return GeorideUser(
+            json['id'],
+            json['email'],
+            json['firstName'],
+            json['createdAt'],
+            json['phoneNumber'],
+            json['pushUserToken'],
+            json['legal'],
+            json['dateOfBirth']
         )
-
-
-
-if __name__ == '__main__':
-    print("Not a main module")

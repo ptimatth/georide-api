@@ -22,3 +22,10 @@ pip install georideapilib
 
 This library has been tested with python 3.7 and above, functionality for older python version cannot be guaranteed.
 
+
+## Todo
+- [ ] Add support of SocketIO connection
+- [ ] Add support of "Get a shared trip" endpoint
+
+
+
