@@ -11,16 +11,16 @@ import georideapilib.api as GeorideApi
 def example():
     """ simple example function """
     token = "<your_token>"# pylint: disable=C0301
-    account = GeorideAccount(0, "<your_email>", False, token)
+    """account = GeorideAccount(0, "<your_email>", False, token)"""
 
-    """
-    GeorideApi.getAuthorisationToken("<your_email>", "<your_password>")
+    
+    account = GeorideApi.get_authorisation_token("<your_email>", "<your_password>")
     print("token 1: ", account.auth_token)
-    """ # pylint: disable=W0105
+    # pylint: disable=W0105
 
 
     """
-    account.auth_token = GeorideApi.renewToken(account.auth_token)
+    account.auth_token = GeorideApi.renew_token(account.auth_token)
     print("token 2: ", account.auth_token) 
     """ # pylint: disable=W0105
 
