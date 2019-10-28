@@ -19,7 +19,7 @@ CURRENT_DIR = os.path.dirname(__file__)
 setup(
     name='georideapilib',
     packages=['georideapilib'],  # this must be the same as the name above
-    version='0.2.0',
+    version='0.3.0',
     description='Lib to control georide tracker devices with their rest api',
     author='Matthieu DUVAL',
     author_email='georideapilib@duval-dev.fr',
@@ -28,7 +28,7 @@ setup(
     download_url='https://codeload.github.com/ptimatth/pyGeoride/tar.gz/0.1.0',
     keywords=['rest', 'georide', 'api', 'grutier'],  # arbitrary keywords
     classifiers=[],
-    install_requires=[],
+    install_requires=["python-socketio[client]"],
     tests_require=[
         'pytest>=3.7',
         'pytest-pep8',

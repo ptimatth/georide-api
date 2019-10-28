@@ -16,6 +16,12 @@ from georideapilib.objects import (
     GeorideSharedTrip
 )
 
+from georideapilib.exception import (
+    LoginException,
+    SeverException,
+    UnauthorizedException
+)
+
 GEORIDE_API_HOST = "https://api.georide.fr"
 GEORIDE_API_ENDPOINT_LOGIN = "/user/login"
 GEORIDE_API_ENDPOINT_NEW_TOKEN = "/user/new-token"
@@ -33,16 +39,25 @@ _SESSION = requests.Session()
 _LOGGER = logging.getLogger(__name__)
 
 def get_authorisation_token(email, password):
-    """ return an authorization token """
+    """ return an authorization token or no"""
     data = {"email": email, "password": password}
     encoded_data = json.dumps(data).encode('utf-8')
+
     response = _SESSION.post( 
         GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_LOGIN,
         data=encoded_data,
         headers={'Content-Type': 'application/json'})
-    response_data = response.json()
-    _LOGGER.debug(response_data)
-    account = GeorideAccount.from_json(response_data)
+    
+    if response.status_code == 200:
+        _LOGGER.debug("Login success")
+        response_data = response.json()
+        account = GeorideAccount.from_json(response_data)
+    elif response.status_code == 403:
+        _LOGGER.warnning("Login failed")
+        raise LoginException("Login failed")
+    else:
+        _LOGGER.error("Georide login, http error code: %s", response.status_code)
+        raise SeverException("Georide login, http error code: {}".format(response.status_code))
     return account
 
 
@@ -52,11 +67,17 @@ def renew_token(token):
     response = _SESSION.get(
         GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_NEW_TOKEN,
         headers=headers)
-    response_data = response.json()
-    _LOGGER.debug(response_data)
-    new_token = response_data['authToken']
+    if response.status_code == 200:
+        _LOGGER.debug("Token updated")
+        response_data = response.json()
+        new_token = response_data['authToken']
+    elif response.status_code == 401:
+        _LOGGER.warnning("Renew token refused")
+        raise UnauthorizedException("Renew token refused")
+    else:
+        _LOGGER.error("Georide login, http error code: %s", response.status_code)
+        raise SeverException("Georide login, http error code: {}".format(response.status_code))
     return new_token
-
 
 def revoke_token(token):
     """ invalidate the authorization token """
@@ -64,7 +85,11 @@ def revoke_token(token):
     response = _SESSION.post(
         GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_LOGOUT,
         headers=headers)
-    if response.status_code != 204:
+    if response.status_code == 401:
+        _LOGGER.warnning("Token allready revoked")
+        raise UnauthorizedException("Token allready revoked")
+    if response.status_code == 401:
+        _LOGGER.warnning("Token allready revoked")
         return False
     return True
 
