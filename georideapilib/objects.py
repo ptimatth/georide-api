@@ -297,6 +297,11 @@ class GeorideTracker: # pylint: disable=R0904,R0902
         """ fixtime """
         return self._fixtime
     
+    @fixtime.setter
+    def fixtime(self, fixtime):
+        """ fixtime """
+        self._fixtime = fixtime
+
     @property
     def role(self):
         """ role """
@@ -347,11 +352,21 @@ class GeorideTracker: # pylint: disable=R0904,R0902
         """ speed """
         return self._speed
     
+    @speed.setter
+    def speed(self, speed):
+        """ speed """
+        self._speed = speed
+
     @property
     def moving(self):
         """ moving """
         return self._moving
     
+    @moving.setter
+    def moving(self, moving):
+        """ moving """
+        self._moving = moving
+
     @property
     def position_id(self):
         """ position_id """
@@ -362,10 +377,20 @@ class GeorideTracker: # pylint: disable=R0904,R0902
         """ latitude """
         return self._latitude
     
+    @latitude.setter
+    def latitude(self, latitude):
+        """ latitude """
+        self._latitude = latitude
+
     @property
     def longitude(self):
         """ longitude """
         return self._longitude
+    
+    @longitude.setter
+    def longitude(self, longitude):
+        """ longitude """
+        self._longitude = longitude
     
     @property
     def altitude(self):
@@ -382,16 +407,31 @@ class GeorideTracker: # pylint: disable=R0904,R0902
         """ locked_latitude """
         return self._locked_latitude
     
+    @locked_latitude.setter
+    def locked_latitude(self, locked_latitude):
+        """ locked_latitude """
+        self._locked_latitude = locked_latitude
+
     @property
     def locked_longitude(self):
         """ locked_longitude """
         return self._locked_longitude
-    
+
+    @locked_longitude.setter
+    def locked_longitude(self, locked_longitude):
+        """ locked_longitude """
+        self._locked_longitude = locked_longitude
+
     @property
     def is_locked(self):
         """ is_locked """
         return self._is_locked
     
+    @is_locked.setter
+    def is_locked(self, is_locked):
+        """ is_locked """
+        self._is_locked = is_locked
+
     @property
     def can_see_position(self):
         """ can_see_position """
@@ -441,6 +481,11 @@ class GeorideTracker: # pylint: disable=R0904,R0902
     def status(self):
         """ status """
         return self._status
+
+    @status.setter
+    def status(self, status):
+        """ status """
+        self._status = status
 
     @staticmethod
     def from_json(json):
