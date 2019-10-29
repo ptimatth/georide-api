@@ -5,12 +5,8 @@ import socketio
 from georideapilib.api import GEORIDE_API_HOST
 
 _LOGGER = logging.getLogger(__name__)
-_LOGGER.setLevel(logging.DEBUG)
-# create console handler and set level to debug
-CH = logging.StreamHandler()
-CH.setLevel(logging.DEBUG)
 
-sio = socketio.Client(reconnection=True)
+sio = socketio.Client(reconnection=True) # pylint: disable=C0103
 
 @sio.on('connect')
 def on_connect():
@@ -65,42 +61,42 @@ class GeorideSocket():
         @sio.on('message')
         def on_message(data):
             """ on_message """
-            _LOGGER.debug('Message recieved: %s', data)
+            _LOGGER.debug('Message received: %s', data)
             if self._on_message_callback is not None:
                 self._on_message_callback()
         
         @sio.on('device')
         def on_device(data):
             """ on_device """
-            _LOGGER.debug('Device recieved: %s', data)
+            _LOGGER.debug('Device received: %s', data)
             if self._on_device_callback is not None:
                 self._on_device_callback()
         
         @sio.on('position')
         def on_position(data):
             """ on_position """
-            _LOGGER.debug('Position recieved:%s', data)
+            _LOGGER.debug('Position received:%s', data)
             if self._on_position_callback is not None:
                 self._on_position_callback()
 
         @sio.on('alarm')
         def on_alarm(data):
             """ on_alarm """
-            _LOGGER.debug('Alarm recieved: %s', data)
+            _LOGGER.debug('Alarm received: %s', data)
             if self._on_alarm_callback is not None:
                 self._on_alarm_callback(data)
             
         @sio.on('refreshTrackersInstruction')
         def on_refresh_tracker():
             """ on_refresh_tracker """
-            _LOGGER.debug('Refresh tracker recieved')
+            _LOGGER.debug('Refresh tracker received')
             if self._on_refresh_tracker_callback is not None:
                 self._on_refresh_tracker_callback()
 
         @sio.on('lockedPosition')
         def on_locked(data):
             """ on_locked """
-            _LOGGER.debug('Locked recieved: %s', data)
+            _LOGGER.debug('Locked received: %s', data)
             if self._on_locked_callback is not None:
                 self._on_locked_callback()
 
@@ -108,7 +104,6 @@ class GeorideSocket():
 
     def connect(self, auth_token):
         """ connect to the georide socket"""
-        _LOGGER.info("Start conection")
         if self._initialised is not False:
             sio.connect(GEORIDE_API_HOST, headers={'token': auth_token})
             sio.wait()
