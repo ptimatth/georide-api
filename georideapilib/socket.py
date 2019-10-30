@@ -63,21 +63,21 @@ class GeorideSocket():
             """ on_message """
             _LOGGER.debug('Message received: %s', data)
             if self._on_message_callback is not None:
-                self._on_message_callback()
+                self._on_message_callback(data)
         
         @sio.on('device')
         def on_device(data):
             """ on_device """
             _LOGGER.debug('Device received: %s', data)
             if self._on_device_callback is not None:
-                self._on_device_callback()
+                self._on_device_callback(data)
         
         @sio.on('position')
         def on_position(data):
             """ on_position """
             _LOGGER.debug('Position received:%s', data)
             if self._on_position_callback is not None:
-                self._on_position_callback()
+                self._on_position_callback(data)
 
         @sio.on('alarm')
         def on_alarm(data):
@@ -98,7 +98,9 @@ class GeorideSocket():
             """ on_locked """
             _LOGGER.debug('Locked received: %s', data)
             if self._on_locked_callback is not None:
-                self._on_locked_callback()
+                self._on_locked_callback(data)
+            else:
+                _LOGGER.debug('Lallback is none')
 
         self._initialised = True
 

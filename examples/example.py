@@ -9,6 +9,8 @@ from georideapilib.objects import GeorideAccount
 import georideapilib.api as GeorideApi
 from georideapilib.socket import GeorideSocket
 
+from threading import Thread
+
 _LOGGER = logging.getLogger('example')
 
 
@@ -22,12 +24,21 @@ def example():
     print("token 1: ", account.auth_token)
     _LOGGER.info("token 1: %s", account.auth_token)
     # pylint: disable=W0105
-    
-    # socket = GeorideSocket()
-    # socket.init()
-    # socket.connect(account.auth_token)
-    # time.sleep(10)
-    # socket.disconnect()
+
+    def locked_locked(data):
+        _LOGGER.info("Locke received")
+
+
+    def connect_socket(account):
+        socket = GeorideSocket()
+        socket.subscribe_locked(locked_locked)
+        socket.init()
+        socket.connect(account.auth_token)
+        time.sleep(10)
+        socket.disconnect()
+
+    thread = Thread(target=connect_socket, args=(account))
+    thread.start()
   
     """
     account.auth_token = GeorideApi.renewToken(account.auth_token)
