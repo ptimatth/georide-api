@@ -53,11 +53,12 @@ def get_authorisation_token(email, password):
         response_data = response.json()
         account = GeorideAccount.from_json(response_data)
     elif response.status_code == 403:
-        _LOGGER.warnning("Login failed")
-        raise LoginException("Login failed")
+        _LOGGER.warning("Login failed")
+        raise LoginException(get_authorisation_token, "Login failed")
     else:
         _LOGGER.error("Georide login, http error code: %s", response.status_code)
-        raise SeverException("Georide login, http error code: {}".format(response.status_code))
+        raise SeverException(get_authorisation_token, 
+                             "Georide login, http error code: {}".format(response.status_code))
     return account
 
 
@@ -73,10 +74,11 @@ def renew_token(token):
         new_token = response_data['authToken']
     elif response.status_code == 401:
         _LOGGER.warnning("Renew token refused")
-        raise UnauthorizedException("Renew token refused")
+        raise UnauthorizedException(renew_token, "Renew token refused")
     else:
         _LOGGER.error("Georide login, http error code: %s", response.status_code)
-        raise SeverException("Georide login, http error code: {}".format(response.status_code))
+        raise SeverException(renew_token, 
+                             "Georide login, http error code: {}".format(response.status_code))
     return new_token
 
 def revoke_token(token):
@@ -87,7 +89,7 @@ def revoke_token(token):
         headers=headers)
     if response.status_code == 401:
         _LOGGER.warnning("Token allready revoked")
-        raise UnauthorizedException("Token allready revoked")
+        raise UnauthorizedException(revoke_token, "Token allready revoked")
     if response.status_code == 401:
         _LOGGER.warnning("Token allready revoked")
         return False
