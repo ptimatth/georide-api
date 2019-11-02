@@ -3,6 +3,8 @@
 
 ⚠️ this is not an official implementation
 
+[![pypi_badge](https://img.shields.io/pypi/v/georideapilib?style=for-the-badge)](https://pypi.org/project/georideapilib/)
+
 Official georide website: https://georide.fr/
 
 This library can control your georide tracker tracker
