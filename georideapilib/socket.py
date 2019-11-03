@@ -98,9 +98,8 @@ class GeorideSocket():
             """ on_locked """
             _LOGGER.debug('Locked received: %s', data)
             if self._on_locked_callback is not None:
-                self._on_locked_callback(data)
-            else:
-                self._initialised = True
+                self._on_locked_callback(data)        
+        self._initialised = True
 
     def connect(self, auth_token):
         """ connect to the georide socket"""
