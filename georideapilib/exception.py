@@ -1,4 +1,4 @@
-""" all geroide exception """
+""" all GeoRide exception """
 
 class Error(Exception):
     """Base class for exceptions in this module."""

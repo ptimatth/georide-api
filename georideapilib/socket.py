@@ -1,4 +1,4 @@
-""" Georide socket-io implementation """
+""" GeoRide socket-io implementation """
 import logging
 import socketio
 
@@ -19,8 +19,8 @@ def on_disconnect():
     _LOGGER.debug('GeoRide socket disconnected')
 
 
-class GeorideSocket():
-    """docstring for GeorideSocket"""
+class GeoRideSocket():
+    """docstring for GeoRideSocket"""
     def __init__(self):
         self._on_message_callback = None
         self._on_device_callback = None
@@ -112,3 +112,19 @@ class GeorideSocket():
     def disconnect(self):
         """disconnect from the georide socket"""
         sio.disconnect()
+
+
+#TODO: remove in v0.8.0
+class GeorideSocket(GeoRideSocket):
+    """ Trip object representation """
+    def __init_subclass__(cls, **kwargs):
+        """Print deprecation warning."""
+        super().__init_subclass__(**kwargs)
+        _LOGGER.warning(
+            "GeorideSocket is deprecated, modify %s to use GeoRideSocket",
+            cls.__name__,
+        )
+    def __init__(self, *argv):
+        """Print deprecation warning."""
+        super().__init__(*argv)
+        _LOGGER.warning("GeorideSocket is deprecated, modify your code to use GeoRideSocket")

@@ -3,7 +3,12 @@ Georide objects implementation
 @author Matthieu DUVAL <matthieu@duval-dev.fr>
 """
 
-class GeorideSharedTrip:
+import logging
+
+
+_LOGGER = logging.getLogger(__name__)
+
+class GeoRideSharedTrip:
     """ Shared trip object representation """
     def __init__(self, url, shareId):
         self._url = url
@@ -22,12 +27,12 @@ class GeorideSharedTrip:
     @staticmethod
     def from_json(json):
         """return new object fromjson"""
-        return GeorideSharedTrip(
+        return GeoRideSharedTrip(
             json['url'],
             json['shareId']
         )
 
-class GeorideTrackerTrip:  # pylint: disable=too-many-instance-attributes
+class GeoRideTrackerTrip:  # pylint: disable=too-many-instance-attributes
     """ Trip object representation """
     def __init__(self, trip_id, tracker_id, average_speed, max_speed, distance, duration, # pylint: disable=R0914, R0913
                  start_address, nice_start_address, start_lat, start_lon, end_address,
@@ -134,7 +139,7 @@ class GeorideTrackerTrip:  # pylint: disable=too-many-instance-attributes
     @staticmethod
     def from_json(json):
         """return new object from json"""
-        return GeorideTrackerTrip(
+        return GeoRideTrackerTrip(
             json['id'],
             json['trackerId'],
             json['averageSpeed'],
@@ -153,8 +158,7 @@ class GeorideTrackerTrip:  # pylint: disable=too-many-instance-attributes
             json['endTime']
         )
 
-
-class GeorideTrackerPosition:
+class GeoRideTrackerPosition:
     """ Tracker position object representation """
     def __init__(self, fixtime, latitude, longitude, altitude, speed, address): # pylint: disable= R0913
         self._fixtime = fixtime
@@ -197,7 +201,7 @@ class GeorideTrackerPosition:
     @staticmethod
     def from_json(json):
         """return new object fromjson"""
-        return GeorideTrackerPosition(
+        return GeoRideTrackerPosition(
             json['fixtime'],
             json['latitude'],
             json['longitude'],
@@ -206,10 +210,7 @@ class GeorideTrackerPosition:
             json['address']
         )
 
-
-
-
-class GeorideTracker: # pylint: disable=R0904,R0902
+class GeoRideTracker: # pylint: disable=R0904,R0902
     """ Tracker position object representation """
     def __init__(self, tracker_id, tracker_name, device_button_action, device_button_delay, # pylint: disable= R0913, R0914, R0915
                  vibration_level, is_old_tracker, auto_lock_freezed_to, fixtime, role,
@@ -490,7 +491,7 @@ class GeorideTracker: # pylint: disable=R0904,R0902
     @staticmethod
     def from_json(json):
         """return new object fromjson"""
-        return GeorideTracker(
+        return GeoRideTracker(
             json['trackerId'],
             json['trackerName'],
             json['deviceButtonAction'],
@@ -530,8 +531,7 @@ class GeorideTracker: # pylint: disable=R0904,R0902
             json['status']
         )
 
-
-class GeorideAccount:
+class GeoRideAccount:
     """ Account object representation """ 
     def __init__(self, account_id, email, is_admin, auth_token):
         self._account_id = account_id
@@ -567,7 +567,7 @@ class GeorideAccount:
     @staticmethod
     def from_json(json):
         """return new object from_json"""
-        return GeorideAccount(
+        return GeoRideAccount(
             json['id'],
             json['email'],
             json['isAdmin'],
@@ -575,7 +575,8 @@ class GeorideAccount:
         )
 
 
-class GeorideUser: # pylint: disable= R0902
+
+class GeoRideUser: # pylint: disable= R0902
     """ User object representation """ 
     def __init__(self, user_id, email, first_name, created_at, phone_number, # pylint: disable= R0913
                  push_user_token, legal, date_of_birth): 
@@ -631,7 +632,7 @@ class GeorideUser: # pylint: disable= R0902
     @staticmethod
     def from_json(json):
         """return new object fromjson"""
-        return GeorideUser(
+        return GeoRideUser(
             json['id'],
             json['email'],
             json['firstName'],
@@ -641,3 +642,95 @@ class GeorideUser: # pylint: disable= R0902
             json['legal'],
             json['dateOfBirth']
         )
+
+#TODO: remove in v0.8.0
+class GeorideSharedTrip(GeoRideSharedTrip):
+    """ Shared trip object representation """
+
+    def __init_subclass__(cls, **kwargs):
+        """Print deprecation warning."""
+        super().__init_subclass__(**kwargs)
+        _LOGGER.warning(
+            "GeorideSharedTrip is deprecated, modify %s to use GeoRideSharedTrip",
+            cls.__name__,
+        )
+
+    def __init__(self, *argv):
+        """Print deprecation warning."""
+        super().__init__(*argv)
+        _LOGGER.warning("GeorideSharedTrip is deprecated, modify your code to use GeoRideSharedTrip")
+
+class GeorideTrackerTrip(GeoRideTrackerTrip):
+    """ Trip object representation """
+    def __init_subclass__(cls, **kwargs):
+        """Print deprecation warning."""
+        super().__init_subclass__(**kwargs)
+        _LOGGER.warning(
+            "GeorideTrackerTrip is deprecated, modify %s to use GeoRideTrackerTrip",
+            cls.__name__,
+        )
+    def __init__(self, *argv):
+        """Print deprecation warning."""
+        super().__init__(*argv)
+        _LOGGER.warning("GeorideTrackerTrip is deprecated, modify your code to use GeoRideTrackerTrip")
+
+class GeorideTrackerPosition(GeoRideTrackerPosition):
+    """ Trip object representation """
+    def __init_subclass__(cls, **kwargs):
+        """Print deprecation warning."""
+        super().__init_subclass__(**kwargs)
+        _LOGGER.warning(
+            "GeorideTrackerPosition is deprecated, modify %s to use GeoRideTrackerPosition",
+            cls.__name__,
+        )
+
+    def __init__(self, *argv):
+        """Print deprecation warning."""
+        super().__init__(*argv)
+        _LOGGER.warning("GeorideTrackerPosition is deprecated, modify your code to use GeoRideTrackerPosition")
+
+class GeorideTracker(GeoRideTracker):
+    """ Trip object representation """
+    def __init_subclass__(cls, **kwargs):
+        """Print deprecation warning."""
+        super().__init_subclass__(**kwargs)
+        _LOGGER.warning(
+            "GeorideTracker is deprecated, modify %s to use GeoRideTracker",
+            cls.__name__,
+        )
+
+    def __init__(self, *argv):
+        """Print deprecation warning."""
+        super().__init__(*argv)
+        _LOGGER.warning("GeorideTracker is deprecated, modify your code to use GeoRideTracker")
+
+
+class GeorideAccount(GeoRideAccount):
+    """ Trip object representation """
+    def __init_subclass__(cls, **kwargs):
+        """Print deprecation warning."""
+        super().__init_subclass__(**kwargs)
+        _LOGGER.warning(
+            "GeorideAccount is deprecated, modify %s to use GeoRideAccount",
+            cls.__name__,
+        )
+
+    def __init__(self, *argv):
+        """Print deprecation warning."""
+        super().__init__(*argv)
+        _LOGGER.warning("GeorideAccount is deprecated, modify your code to use GeoRideAccount")
+
+class GeorideUser(GeoRideUser):
+    """ Trip object representation """
+    def __init_subclass__(cls, **kwargs):
+        """Print deprecation warning."""
+        super().__init_subclass__(**kwargs)
+        _LOGGER.warning(
+            "GeorideUser is deprecated, modify %s to use GeoRideUser",
+            cls.__name__,
+        )
+
+    def __init__(self, *argv):
+        """Print deprecation warning."""
+        super().__init__(*argv)
+        _LOGGER.warning("GeorideUser is deprecated, modify your code to use GeoRideUser")

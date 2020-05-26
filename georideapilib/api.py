@@ -8,12 +8,12 @@ import logging
 import requests
 
 from georideapilib.objects import (
-    GeorideTracker, 
-    GeorideAccount, 
-    GeorideUser,  
-    GeorideTrackerTrip,  
-    GeorideTrackerPosition, 
-    GeorideSharedTrip
+    GeoRideTracker, 
+    GeoRideAccount, 
+    GeoRideUser,  
+    GeoRideTrackerTrip,  
+    GeoRideTrackerPosition, 
+    GeoRideSharedTrip
 )
 
 from georideapilib.exception import (
@@ -51,7 +51,7 @@ def get_authorisation_token(email, password):
     if response.status_code == 200:
         _LOGGER.debug("Login success")
         response_data = response.json()
-        account = GeorideAccount.from_json(response_data)
+        account = GeoRideAccount.from_json(response_data)
     elif response.status_code == 403:
         _LOGGER.warning("Login failed")
         raise LoginException(get_authorisation_token, "Login failed")
@@ -104,7 +104,7 @@ def get_user(token):
         headers=headers)
     response_data = response.json()
     _LOGGER.debug(response_data)
-    account = GeorideUser.from_json(response_data)
+    account = GeoRideUser.from_json(response_data)
     return account  
 
 def get_trackers(token):
@@ -117,7 +117,7 @@ def get_trackers(token):
     response_data = response.json()
     trackers = []
     for json_tracker in response_data:
-        trackers.append(GeorideTracker.from_json(json_tracker))
+        trackers.append(GeoRideTracker.from_json(json_tracker))
     return trackers
 
 
@@ -132,7 +132,7 @@ def get_trips(token, tracker_id, from_date, to_date):
     response_data = response.json()
     trips = []
     for json_trip in response_data:
-        trips.append(GeorideTrackerTrip.from_json(json_trip))
+        trips.append(GeoRideTrackerTrip.from_json(json_trip))
     return trips
 
 def get_positions(token, tracker_id, from_date, to_date):
@@ -146,7 +146,7 @@ def get_positions(token, tracker_id, from_date, to_date):
     response_data = response.json()
     positions = []
     for json_position in response_data:
-        positions.append(GeorideTrackerPosition.from_json(json_position))
+        positions.append(GeoRideTrackerPosition.from_json(json_position))
     return positions
 
 def share_a_trip_by_trip_id(token, tracker_id, trip_id):
@@ -184,7 +184,7 @@ def _share_a_trip(token, tracker_id, trip_id=None, from_date=None, # pylint: dis
         headers=headers)
 
     response_data = response.json()
-    return GeorideSharedTrip.from_json(response_data)
+    return GeoRideSharedTrip.from_json(response_data)
 
 def lock_tracker(token, tracker_id):
     """ used to lock a tracker """

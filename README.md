@@ -1,5 +1,5 @@
-# Georideapilib
-![Logo Georide](georide-logo.png)
+# georideapilib
+![Logo GeoRide](georide-logo.png)
 
 ⚠️ this is not an official implementation
 
