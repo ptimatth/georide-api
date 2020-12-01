@@ -7,7 +7,7 @@
 
 Official georide website: https://georide.fr/
 
-This library can control your georide tracker tracker
+This library can control your georide tracker
 
 
 Some code have been taken from @alexmohr https://github.com/alexmohr/sonyapilib
