@@ -226,27 +226,27 @@ class GeoRideTracker: # pylint: disable=R0904,R0902
         self._device_button_delay = device_button_delay
         self._vibration_level = vibration_level
         self._is_old_tracker = is_old_tracker
-        self._auto_lock_freezed_to = auto_lock_freezed_to
-        self._fixtime = fixtime
-        self._role = role
-        self._last_payment_date = last_payment_date
-        self._gift_card_id = gift_card_id 
-        self._expires = expires
-        self._activation_date = activation_date
-        self._odometer = odometer
-        self._is_stolen = is_stolen
-        self._is_crashed = is_crashed
-        self._crash_detection_disabled = crash_detection_disabled
-        self._speed = speed
-        self._moving = moving
         self._position_id = position_id
+        self._fixtime = fixtime
         self._latitude = latitude
         self._longitude = longitude
         self._altitude = altitude
         self._locked_position_id = locked_position_id
         self._locked_latitude = locked_latitude
         self._locked_longitude = locked_longitude
+        self._role = role
+        self._subscription_id = subscription_id
+        self._last_payment_date = last_payment_date
+        self._gift_card_id = gift_card_id 
+        self._expires = expires
+        self._activation_date = activation_date
+        self._odometer = odometer
         self._is_locked = is_locked
+        self._is_stolen = is_stolen
+        self._is_crashed = is_crashed
+        self._crash_detection_disabled = crash_detection_disabled
+        self._speed = speed
+        self._moving = moving
         self._can_see_position = can_see_position
         self._can_lock = can_lock
         self._can_unlock = can_unlock
@@ -257,6 +257,7 @@ class GeoRideTracker: # pylint: disable=R0904,R0902
         self._can_send_broken_down_signal = can_send_broken_down_signal
         self._can_send_stolen_signal = can_send_stolen_signal
         self._status = status
+        self._auto_lock_freezed_to = auto_lock_freezed_to
 
     @property
     def tracker_id(self):
@@ -337,12 +338,22 @@ class GeoRideTracker: # pylint: disable=R0904,R0902
     def is_stolen(self):
         """ is_stolen """
         return self._is_stolen
+
+    @is_stolen.setter
+    def is_stolen(self, is_stolen):
+        """ is_stolen setter"""
+        self._is_stolen = is_stolen
     
     @property
     def is_crashed(self):
         """ is_crashed """
         return self._is_crashed
     
+    @is_crashed.setter
+    def is_crashed(self, is_crashed):
+        """ is_crashed setter"""
+        self._is_crashed = is_crashed
+
     @property
     def crash_detection_disabled(self):
         """ crash_detection_disabled """
@@ -530,6 +541,46 @@ class GeoRideTracker: # pylint: disable=R0904,R0902
             json['canSendStolenSignal'],
             json['status']
         )
+
+    def update_all_data(self, tracker):
+        """update all data of th tracker from anew object"""
+        self._tracker_name = tracker.tracker_name
+        self._device_button_action = tracker.device_button_action
+        self._device_button_delay = tracker.device_button_delay
+        self._vibration_level = tracker.vibration_level
+        self._is_old_tracker = tracker.is_old_tracker
+        self._position_id = tracker.position_id
+        self._fixtime = tracker.fixtime
+        self._latitude = tracker.latitude
+        self._longitude = tracker.longitude
+        self._altitude = tracker.altitude
+        self._locked_position_id = tracker.locked_position_id
+        self._locked_latitude = tracker.locked_latitude
+        self._locked_longitude = tracker.locked_longitude
+        self._role = tracker.role
+        self._subscription_id = tracker.subscription_id
+        self._last_payment_date = tracker.last_payment_date
+        self._gift_card_id = tracker.gift_card_id 
+        self._expires = tracker.expires
+        self._activation_date = tracker.activation_date
+        self._odometer = tracker.odometer
+        self._is_locked = tracker.is_locked
+        self._is_stolen = tracker.is_stolen
+        self._is_crashed = tracker.is_crashed
+        self._crash_detection_disabled = tracker.crash_detection_disabled
+        self._speed = tracker.speed
+        self._moving = tracker.moving
+        self._can_see_position = tracker.can_see_position
+        self._can_lock = tracker.can_lock
+        self._can_unlock = tracker.can_unlock
+        self._can_share = tracker.can_share
+        self._can_unshare = tracker.can_unshare
+        self._can_check_speed = tracker.can_check_speed
+        self._can_see_statistics = tracker.can_see_statistics
+        self._can_send_broken_down_signal = tracker.can_send_broken_down_signal
+        self._can_send_stolen_signal = tracker.can_send_stolen_signal
+        self._status = tracker.status
+        self._auto_lock_freezed_to = tracker.auto_lock_freezed_to
 
 class GeoRideAccount:
     """ Account object representation """ 

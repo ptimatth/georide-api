@@ -109,6 +109,7 @@ def get_user(token):
 
 def get_trackers(token):
     """ get user trackers """
+
     headers = {"Authorization": "Bearer " + token}
     response = _SESSION.get(
         GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_TRAKERS,
@@ -117,6 +118,7 @@ def get_trackers(token):
     response_data = response.json()
     trackers = []
     for json_tracker in response_data:
+        _LOGGER.debug(json_tracker)
         trackers.append(GeoRideTracker.from_json(json_tracker))
     return trackers
 

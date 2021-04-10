@@ -41,7 +41,7 @@ def example():
     thread.start()
   
     """
-    account.auth_token = GeorideApi.renewToken(account.auth_token)
+    account.auth_token = GeoRideApi.renewToken(account.auth_token)
     print("token 2: ", account.auth_token) 
     """ # pylint: disable=W0105
 

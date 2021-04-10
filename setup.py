@@ -24,8 +24,8 @@ setup(
     author='Matthieu DUVAL',
     author_email='georideapilib@duval-dev.fr',
     # use the URL to the github repo
-    url='https://github.com/ptimatth/pyGeoride',
-    download_url='https://codeload.github.com/ptimatth/pyGeoride/tar.gz/0.1.0',
+    url='https://github.com/hacf/georide-api',
+    download_url='https://codeload.github.com/hacf/georide-api/tar.gz/0.5.0',
     keywords=['rest', 'georide', 'api', 'grutier', 'GeoRide'],  # arbitrary keywords
     classifiers=[],
     install_requires=["python-socketio[client]"],
