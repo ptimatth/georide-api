@@ -219,7 +219,8 @@ class GeoRideTracker: # pylint: disable=R0904,R0902
                  longitude, altitude, locked_position_id, locked_latitude, locked_longitude,
                  is_locked, can_see_position, can_lock, can_unlock, can_share, can_unshare,
                  can_check_speed, can_see_statistics, can_send_broken_down_signal,
-                 can_send_stolen_signal, status):
+                 can_send_stolen_signal, status, subscription_id, external_battery_voltage,
+                 internal_battery_voltage, timezone, is_second_gen, is_up_to_date):
         self._tracker_id = tracker_id
         self._tracker_name = tracker_name
         self._device_button_action = device_button_action
@@ -257,7 +258,12 @@ class GeoRideTracker: # pylint: disable=R0904,R0902
         self._can_send_stolen_signal = can_send_stolen_signal
         self._status = status
         self._auto_lock_freezed_to = auto_lock_freezed_to
-
+        self._subscription_id = subscription_id
+        self._external_battery_voltage = external_battery_voltage
+        self._internal_battery_voltage = internal_battery_voltage 
+        self._timezone = timezone
+        self._is_second_gen = is_second_gen
+        self._is_up_to_date = is_up_to_date
     @property
     def tracker_id(self):
         """ tracker_id """
@@ -498,6 +504,37 @@ class GeoRideTracker: # pylint: disable=R0904,R0902
         """ status """
         self._status = status
 
+    @property
+    def subscription_id(self):
+        """subscription_id property"""
+        return self._subscription_id
+
+    @property
+    def external_battery_voltage(self):
+        """_external_battery_voltage property"""
+        return self._external_battery_voltage
+
+    @property
+    def internal_battery_voltage(self):
+        """internal_battery_voltage property"""
+        return self._internal_battery_voltage
+
+    @property
+    def timezone(self):
+        """timezone property"""
+        return self._timezone
+
+    @property
+    def is_second_gen(self):
+        """is_second_gen property"""
+        return self._is_second_gen
+
+    @property
+    def is_up_to_date(self):
+        """is_up_to_date property"""
+        return self._is_up_to_date
+
+
     @staticmethod
     def from_json(json):
         """return new object fromjson"""
@@ -538,7 +575,13 @@ class GeoRideTracker: # pylint: disable=R0904,R0902
             json['canSeeStatistics'],
             json['canSendBrokenDownSignal'],
             json['canSendStolenSignal'],
-            json['status']
+            json['status'],
+            None if json['subscriptionId'] == "None" else json['subscriptionId'],
+            None if json['externalBatteryVoltage'] == "None" else json['externalBatteryVoltage'],
+            None if json['internalBatteryVoltage'] == "None" else json['internalBatteryVoltage'],
+            json['timezone'],
+            json['isSecondGen'],
+            json['isUpToDate']
         )
 
     def update_all_data(self, tracker):
@@ -579,6 +622,12 @@ class GeoRideTracker: # pylint: disable=R0904,R0902
         self._can_send_stolen_signal = tracker.can_send_stolen_signal
         self._status = tracker.status
         self._auto_lock_freezed_to = tracker.auto_lock_freezed_to
+        self._subscription_id = tracker.subscription_id
+        self._external_battery_voltage = tracker.external_battery_voltage
+        self._internal_battery_voltage = tracker.internal_battery_voltage
+        self._timezone = tracker.timezone
+        self._is_second_gen = tracker.is_second_gen
+        self._is_up_to_date = tracker.is_up_to_date
 
 class GeoRideAccount:
     """ Account object representation """ 
