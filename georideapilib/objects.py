@@ -8,6 +8,13 @@ import logging
 
 _LOGGER = logging.getLogger(__name__)
 
+class JsonMgtMetaClass(type):
+    @staticmethod
+    def json_field_protect(json, field_name, default_value = None):
+        return json[field_name] if field_name in json.keys() else default_value
+    
+        
+
 class GeoRideSharedTrip:
     """ Shared trip object representation """
     def __init__(self, url, shareId):
@@ -210,7 +217,7 @@ class GeoRideTrackerPosition:
             json['address']
         )
 
-class GeoRideTracker: # pylint: disable=R0904,R0902
+class GeoRideTracker(metaclass=JsonMgtMetaClass): # pylint: disable=R0904,R0902
     """ Tracker position object representation """
     def __init__(self, tracker_id, tracker_name, device_button_action, device_button_delay, # pylint: disable= R0913, R0914, R0915
                  vibration_level, is_old_tracker, auto_lock_freezed_to, fixtime, role,
@@ -220,7 +227,10 @@ class GeoRideTracker: # pylint: disable=R0904,R0902
                  is_locked, can_see_position, can_lock, can_unlock, can_share, can_unshare,
                  can_check_speed, can_see_statistics, can_send_broken_down_signal,
                  can_send_stolen_signal, status, subscription_id, external_battery_voltage,
-                 internal_battery_voltage, timezone, is_second_gen, is_up_to_date):
+                 internal_battery_voltage, timezone, is_second_gen, is_up_to_date,
+                 subscription, version, gift_card_expires, gift_card_months, odometer_updated_at,
+                 maintenance_mode_until, battery_updated_at, is_in_eco, is_calibrated, 
+                 is_oldsubscription, software_version, has_beacon, has_outdated_beacons, ecall_activated):
         self._tracker_id = tracker_id
         self._tracker_name = tracker_name
         self._device_button_action = device_button_action
@@ -264,6 +274,21 @@ class GeoRideTracker: # pylint: disable=R0904,R0902
         self._timezone = timezone
         self._is_second_gen = is_second_gen
         self._is_up_to_date = is_up_to_date
+        self._subscription = subscription
+        self._version = version
+        self._gift_card_expires = gift_card_expires
+        self._gift_card_months = gift_card_months
+        self._odometer_updated_at = odometer_updated_at
+        self._maintenance_mode_until = maintenance_mode_until
+        self._battery_updated_at = battery_updated_at
+        self._is_in_eco = is_in_eco
+        self._is_calibrated = is_calibrated
+        self._is_oldsubscription = is_oldsubscription
+        self._software_version = software_version
+        self._has_beacon = has_beacon
+        self._has_outdated_beacons = has_outdated_beacons
+        self._ecall_activated = ecall_activated
+
     @property
     def tracker_id(self):
         """ tracker_id """
@@ -534,54 +559,137 @@ class GeoRideTracker: # pylint: disable=R0904,R0902
         """is_up_to_date property"""
         return self._is_up_to_date
 
+    @property
+    def subscription(self):
+        """ subscription property """
+        return self._subscription
 
-    @staticmethod
-    def from_json(json):
+    @property
+    def version(self):
+        """ version property """
+        return self._version
+
+    @property
+    def gift_card_expires(self):
+        """ gift_card_expires property """
+        return self._gift_card_expires
+
+    @property
+    def gift_card_months(self):
+        """ gift_card_months property """
+        return self._gift_card_months
+
+    @property
+    def odometer_updated_at(self):
+        """ odometer_updated_at property """
+        return self._odometer_updated_at
+
+    @property
+    def maintenance_mode_until(self):
+        """ maintenance_mode_until property """
+        return self._maintenance_mode_until
+
+    @property
+    def battery_updated_at(self):
+        """ battery_updated_at property """
+        return self._battery_updated_at
+
+    @property
+    def is_in_eco(self):
+        """ is_in_eco property """
+        return self._is_in_eco
+
+    @property
+    def is_calibrated(self):
+        """ is_calibrated property """
+        return self._is_calibrated
+
+    @property
+    def is_oldsubscription(self):
+        """ is_oldsubscription property """
+        return self._is_oldsubscription
+        
+    @property
+    def software_version(self):
+        """ software_version property """
+        return self._software_version
+
+    @property
+    def has_beacon(self):
+        """ has_beacon property """
+        return self._has_beacon
+
+    @property
+    def has_outdated_beacons(self):
+        """ has_outdated_beacons property """
+        return self._has_outdated_beacons
+
+    @property
+    def ecall_activated(self):
+        """ ecall_activated property """
+        return self._ecall_activated
+        
+    @classmethod
+    def from_json(cls, json):
         """return new object fromjson"""
         return GeoRideTracker(
-            json['trackerId'],
-            json['trackerName'],
-            json['deviceButtonAction'],
-            json['deviceButtonDelay'],
-            json['vibrationLevel'],
-            json['isOldTracker'],
-            json['autoLockFreezedTo'],
-            json['fixtime'],
-            json['role'],
-            json['lastPaymentDate'],
-            json['giftCardId'],
-            json['expires'],
-            json['activationDate'],
-            json['odometer'],
-            json['isStolen'],
-            json['isCrashed'],
-            json['crashDetectionDisabled'],
-            json['speed'],
-            json['moving'],
-            json['positionId'],
-            json['latitude'],
-            json['longitude'],
-            json['altitude'],
-            json['lockedPositionId'],
-            json['lockedLatitude'],
-            json['lockedLongitude'],
-            json['isLocked'],
-            json['canSeePosition'],
-            json['canLock'],
-            json['canUnlock'],
-            json['canShare'],
-            json['canUnshare'],
-            json['canCheckSpeed'],
-            json['canSeeStatistics'],
-            json['canSendBrokenDownSignal'],
-            json['canSendStolenSignal'],
-            json['status'],
-            None if json['subscriptionId'] == "None" else json['subscriptionId'],
-            None if json['externalBatteryVoltage'] == "None" else json['externalBatteryVoltage'],
-            None if json['internalBatteryVoltage'] == "None" else json['internalBatteryVoltage'],
-            json['timezone'],
-            json['isSecondGen'],
-            json['isUpToDate']
+            json['trackerId'], # Mandatory
+            json['trackerName'], # Mandatory
+            cls.json_field_protect(json,'deviceButtonAction'),
+            cls.json_field_protect(json,'deviceButtonDelay'),
+            cls.json_field_protect(json,'vibrationLevel'),
+            cls.json_field_protect(json,'isOldTracker', False),
+            cls.json_field_protect(json,'autoLockFreezedTo'),
+            cls.json_field_protect(json,'fixtime'),
+            json['role'], # Mandatory
+            json['lastPaymentDate'],# Mandatory
+            cls.json_field_protect(json,'giftCardId'),
+            cls.json_field_protect(json,'expires'),
+            cls.json_field_protect(json,'activationDate'),
+            json['odometer'],#Mandatory
+            cls.json_field_protect(json,'isStolen', False),
+            cls.json_field_protect(json,'isCrashed', False),
+            cls.json_field_protect(json,'crashDetectionDisabled'),
+            json['speed'], # Mandatory
+            json['moving'], # Mandatory
+            cls.json_field_protect(json,'positionId', -1),
+            json['latitude'], # Mandatory
+            json['longitude'], # Mandatory
+            cls.json_field_protect(json,'altitude', 0),
+            cls.json_field_protect(json,'lockedPositionId'),
+            cls.json_field_protect(json,'lockedLatitude'),
+            cls.json_field_protect(json,'lockedLongitude'),
+            json['isLocked'], # Mandatory
+            json['canSeePosition'],# Mandatory
+            cls.json_field_protect(json,'canLock', False),
+            cls.json_field_protect(json,'canUnlock', False),
+            cls.json_field_protect(json,'canShare', False),
+            cls.json_field_protect(json,'canUnshare', False),
+            cls.json_field_protect(json,'canCheckSpeed', False),
+            cls.json_field_protect(json,'canSeeStatistics', False),
+            cls.json_field_protect(json,'canSendBrokenDownSignal', False),
+            cls.json_field_protect(json,'canSendStolenSignal', False),
+            json['status'],# Mandatory
+            cls.json_field_protect(json,'subscriptionId'),
+            cls.json_field_protect(json,'externalBatteryVoltage', -1.0),
+            cls.json_field_protect(json,'internalBatteryVoltage', -1.0),
+            cls.json_field_protect(json,'timezone', "Europe/Paris"),
+            cls.json_field_protect(json,'isSecondGen', False),
+            cls.json_field_protect(json,'isUpToDate', False),
+            GeoRideSubscription.from_json(json['subscription']) if cls.json_field_protect(json,'subscription') is not None else None,
+            cls.json_field_protect(json,'version', -1),
+            cls.json_field_protect(json,'giftCardExpires'),
+            cls.json_field_protect(json,'giftCardMonths'),
+            cls.json_field_protect(json,'odometerUpdatedAt'),
+            cls.json_field_protect(json,'maintenanceModeUntil'),
+            cls.json_field_protect(json,'batteryUpdatedAt'),
+            cls.json_field_protect(json,'isInEco', False),
+            cls.json_field_protect(json,'isCalibrated', True),
+            cls.json_field_protect(json,'isOldSubscription', True),
+            cls.json_field_protect(json,'softwareVersion', -1),
+            cls.json_field_protect(json,'hasBeacon', False),
+            cls.json_field_protect(json,'hasOutdatedBeacons', False),
+            cls.json_field_protect(json,'eCallActivated', False)
         )
 
     def update_all_data(self, tracker):
@@ -628,6 +736,198 @@ class GeoRideTracker: # pylint: disable=R0904,R0902
         self._timezone = tracker.timezone
         self._is_second_gen = tracker.is_second_gen
         self._is_up_to_date = tracker.is_up_to_date
+        self._subscription = tracker.subscription
+        self._version = tracker.version
+        self._gift_card_expires = tracker.gift_card_expires
+        self._gift_card_months = tracker.gift_card_months
+        self._odometer_updated_at = tracker.odometer_updated_at
+        self._maintenance_mode_until = tracker.maintenance_mode_until
+        self._battery_updated_at = tracker.battery_updated_at
+        self._is_in_eco = tracker.is_in_eco
+        self._is_calibrated = tracker.is_calibrated
+        self._is_oldsubscription = tracker.is_oldsubscription
+        self._software_version = tracker.software_version
+        self._has_beacon = tracker.has_beacon
+        self._has_outdated_beacons = tracker.has_outdated_beacons
+        self._ecall_activated = tracker.ecall_activated
+
+class GeoRideTrackerBeacon:
+    """ GeoRideTrackerBeacon representation """ 
+    def __init__(self, beacon_id, name, created_at, updated_at, mac_address,
+                 battery_level, last_battery_level_update, sleep_delay,
+                 is_updated, power):
+        self._beacon_id = beacon_id
+        self._name = name
+        self._created_at = created_at
+        self._updated_at = updated_at
+        self._mac_address = mac_address
+        self._battery_level = battery_level
+        self._last_battery_level_update = last_battery_level_update
+        self._sleep_delay = sleep_delay
+        self._is_updated = is_updated
+        self._power = power
+    @property
+    def beacon_id(self):
+        """beacon_id property"""
+        return self._beacon_id
+
+    @property
+    def name(self):
+        """name property"""
+        return self._name
+
+    @property
+    def created_at(self):
+        """created_at property"""
+        return self._created_at
+
+    @property
+    def updated_at(self):
+        """updated_at property"""
+        return self._updated_at
+
+    @property
+    def mac_address(self):
+        """mac_address property"""
+        return self._mac_address
+
+    @property
+    def battery_level(self):
+        """battery_level property"""
+        return self._battery_level
+
+    @property
+    def last_battery_level_update(self):
+        """last_battery_level_update property"""
+        return self._last_battery_level_update
+
+    @property
+    def sleep_delay(self):
+        """sleep_delay property"""
+        return self._sleep_delay
+
+    @property
+    def is_updated(self):
+        """is_updated property"""
+        return self._is_updated
+
+    @property
+    def power(self):
+        """power property"""
+        return self._power
+
+    @classmethod
+    def from_json(cls, json):
+        """return new object from_json"""
+        return GeoRideTrackerBeacon(
+            json['id'],
+            json['name'],
+            json['createdAt'],
+            json['updatedAt'],
+            json['macAddress'],
+            json['batteryLevel'],
+            json['lastBatteryLevelUpdate'],
+            json['sleepDelay'],
+            json['isUpdated'],
+            json['power'])
+
+class GeoRideSubscription:
+    """ Account object representation """ 
+    def __init__(self, subscription_id, subscription_type, initialDate, nextPaymentDate,
+                status, pausedSince, cancelRequested, price, firstName, lastName, cardInformation):
+        self._subscription_id = subscription_id
+        self._subscription_type = subscription_type
+        self._initial_date = initial_date
+        self._next_payment_date = next_payment_date
+        self._status = status
+        self._paused_since = paused_since
+        self._cancel_requested = cancel_requested
+        self._price = price
+        self._first_name = first_name
+        self._last_name = last_name
+
+    @property
+    def subscription_id(self):
+        """subscription_id property"""
+        return self._subscription_id
+
+    @property
+    def subscription_type(self):
+        """subscription_type property"""
+        return self._subscription_type
+
+    @property
+    def initial_date(self):
+        """initial_date property"""
+        return self._initial_date
+
+    @property
+    def next_payment_date(self):
+        """next_payment_date property"""
+        return self._next_payment_date
+
+    @property
+    def status(self):
+        """status property"""
+        return self._status
+
+    @property
+    def paused_since(self):
+        """paused_since property"""
+        return self._paused_since
+
+    @property
+    def cancel_requested(self):
+        """cancel_requested property"""
+        return self._cancel_requested
+
+    @property
+    def price(self):
+        """price property"""
+        return self._price
+
+    @property
+    def first_name(self):
+        """first_name property"""
+        return self._first_name
+
+    @property
+    def last_name(self):
+        """last_name property"""
+        return self._last_name
+
+    @classmethod
+    def from_json(cls, json):
+        """return new object from_json"""
+        return GeoRideSubscription(
+            json['id'],
+            json['type'],
+            json['initialDate'],
+            json['nextPaymentDate'],
+            json['status'],
+            json['pausedSince'],
+            json['cancelRequested'],
+            json['price'],
+            json['firstName'],
+            json['lastName'],
+            GeoRideSubscription_CardInfo.from_json(json['cardInformation'])
+        )
+
+class GeoRideSubscription_CardInfo:
+    """ Account object representation """ 
+    def __init__(self, last_digits, expiry, brand):
+        self._last_digits = last_digits
+        self._expiry = expiry
+        self._brand = brand
+   
+    @classmethod
+    def from_json(cls, json):
+        """return new object from_json"""
+        return GeoRideSubscription_CardInfo(
+            json['lastDigits'],
+            json['expiry'],
+            json['brand']
+        )
 
 class GeoRideAccount:
     """ Account object representation """ 
@@ -671,8 +971,6 @@ class GeoRideAccount:
             json['isAdmin'],
             json['authToken']
         )
-
-
 
 class GeoRideUser: # pylint: disable= R0902
     """ User object representation """ 
