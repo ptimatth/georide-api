@@ -86,7 +86,32 @@ def example():
     tracker = trackers[0]
     _LOGGER.info("Tracker name: %s is locked: %s", tracker.tracker_name, tracker.is_locked)
 
+    if tracker.version >= 3:
+        _LOGGER.info("Congrat for your new gen GeoRide \o/")
 
+        # Have been commented for your neighbor ;)
+        # time.sleep(10)
+        # have_been_siren_turned_on = GeoRideApi.change_tracker_siren_state(account.auth_token, tracker.tracker_id, True)
+        # _LOGGER.info("Tracker siren is on: %s", have_been_siren_turned_on)
+
+        # time.sleep(5)
+        # have_been_siren_turned_off = GeoRideApi.change_tracker_siren_state(account.auth_token, tracker.tracker_id, False)
+        # _LOGGER.info("Tracker siren is off: %s", have_been_siren_turned_off)
+
+        time.sleep(10)
+        changed_to_eco_mode = GeoRideApi.change_tracker_eco_mode_state(account.auth_token, tracker.tracker_id, True)
+        _LOGGER.info("Tracker eco mode is on: %s", changed_to_eco_mode)
+
+        time.sleep(5)
+        changed_to_normal_mode = GeoRideApi.change_tracker_eco_mode_state(account.auth_token, tracker.tracker_id, False)
+        _LOGGER.info("Tracker eco mode is off: %s", changed_to_normal_mode)
+        
+        tracker_beacon = GeoRideApi.get_tracker_beacon(account.auth_token, tracker.tracker_id)
+        _LOGGER.info("Your tracker beacon state: %s", tracker_beacon)
+
+        #you can also shutdown your tracker with shutdown_tracker(<token>, tracker_id) but i d'on give you an example.
+    else:
+        _LOGGER.info("You are from the first wave ;)")
 
 
     """
