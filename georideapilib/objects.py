@@ -833,8 +833,8 @@ class GeoRideTrackerBeacon:
 
 class GeoRideSubscription:
     """ Account object representation """ 
-    def __init__(self, subscription_id, subscription_type, initialDate, nextPaymentDate,
-                status, pausedSince, cancelRequested, price, firstName, lastName, cardInformation):
+    def __init__(self, subscription_id, subscription_type, initial_date, next_payment_date,
+                status, paused_since, cancel_requested, price, first_name, last_name, card_information):
         self._subscription_id = subscription_id
         self._subscription_type = subscription_type
         self._initial_date = initial_date
@@ -845,6 +845,7 @@ class GeoRideSubscription:
         self._price = price
         self._first_name = first_name
         self._last_name = last_name
+        self._card_information = card_information
 
     @property
     def subscription_id(self):
@@ -895,6 +896,11 @@ class GeoRideSubscription:
     def last_name(self):
         """last_name property"""
         return self._last_name
+
+    @property
+    def card_information(self):
+        """card_information property"""
+        return self._card_information
 
     @classmethod
     def from_json(cls, json):
