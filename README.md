@@ -27,7 +27,7 @@ This library has been tested with python 3.7 and above, functionality for older 
 ## Main repo:
 	- https://git.tontontux.fr/mduval/pyGeoride
 ## Github repo:
- 	- https://github.com/ptimatth/pyGeoride
+ 	- https://github.com/ptimatth/georide-api
 
 ## Todo
 - [ ] Add support of "Get a shared trip" endpoint
