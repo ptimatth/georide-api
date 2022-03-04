@@ -19,13 +19,13 @@ CURRENT_DIR = os.path.dirname(__file__)
 setup(
     name='georideapilib',
     packages=['georideapilib'],  # this must be the same as the name above
-    version='0.8.0',
+    version='0.8.1',
     description='Lib to control GeoRide tracker devices with theire rest api',
     author='Matthieu DUVAL',
     author_email='georideapilib@duval-dev.fr',
     # use the URL to the github repo
     url='https://github.com/hacf/georide-api',
-    download_url='https://codeload.github.com/hacf/georide-api/tar.gz/0.8.0',
+    download_url='https://codeload.github.com/hacf/georide-api/tar.gz/0.8.1',
     keywords=['rest', 'georide', 'api', 'grutier', 'GeoRide'],  # arbitrary keywords
     classifiers=[],
     install_requires=["python-socketio[client]==4.6.1"],
