@@ -2,7 +2,7 @@
 Georide objects implementation
 @author Matthieu DUVAL <matthieu@duval-dev.fr>
 """
-
+import time
 import logging
 
 
@@ -288,6 +288,8 @@ class GeoRideTracker(metaclass=JsonMgtMetaClass): # pylint: disable=R0904,R0902
         self._has_beacon = has_beacon
         self._has_outdated_beacons = has_outdated_beacons
         self._ecall_activated = ecall_activated
+        self._is_siren_on = False
+        self._siren_last_on_date = time.time()
 
     @property
     def tracker_id(self):
@@ -598,6 +600,28 @@ class GeoRideTracker(metaclass=JsonMgtMetaClass): # pylint: disable=R0904,R0902
     def is_in_eco(self):
         """ is_in_eco property """
         return self._is_in_eco
+    
+    @is_in_eco.setter
+    def is_in_eco(self, is_in_eco):
+        """ is_in_eco setter """
+        self._is_in_eco = is_in_eco
+
+    @property
+    def is_siren_on(self):
+        """ is_siren_on property """
+        return self._is_siren_on
+    
+    @is_siren_on.setter
+    def is_siren_on(self, is_siren_on):
+        """ is_siren_on setter """
+        if is_siren_on:
+            self._siren_last_on_date = time.time()
+        self._is_siren_on = is_siren_on
+
+    @property
+    def siren_last_on_date(self):
+        """ siren_last_on_date property """
+        return self._siren_last_on_date
 
     @property
     def is_calibrated(self):
@@ -753,10 +777,11 @@ class GeoRideTracker(metaclass=JsonMgtMetaClass): # pylint: disable=R0904,R0902
 
 class GeoRideTrackerBeacon:
     """ GeoRideTrackerBeacon representation """ 
-    def __init__(self, beacon_id, name, created_at, updated_at, mac_address,
-                 battery_level, last_battery_level_update, sleep_delay,
+    def __init__(self, beacon_id, linked_tracker_id, name, created_at, updated_at,
+                 mac_address, battery_level, last_battery_level_update, sleep_delay,
                  is_updated, power):
         self._beacon_id = beacon_id
+        self._linked_tracker_id = linked_tracker_id
         self._name = name
         self._created_at = created_at
         self._updated_at = updated_at
@@ -766,6 +791,18 @@ class GeoRideTrackerBeacon:
         self._sleep_delay = sleep_delay
         self._is_updated = is_updated
         self._power = power
+
+
+    @property
+    def linked_tracker_id(self):
+        """ linked_tracker_id property """
+        return self._linked_tracker_id
+    
+    @linked_tracker_id.setter
+    def linked_tracker_id(self, linked_tracker_id):
+        """ linked_tracker_id setter """
+        self._linked_tracker_id = linked_tracker_id
+
     @property
     def beacon_id(self):
         """beacon_id property"""
@@ -821,6 +858,7 @@ class GeoRideTrackerBeacon:
         """return new object from_json"""
         return GeoRideTrackerBeacon(
             json['id'],
+            json['linked_tracker_id'],
             json['name'],
             json['createdAt'],
             json['updatedAt'],
@@ -830,6 +868,19 @@ class GeoRideTrackerBeacon:
             json['sleepDelay'],
             json['isUpdated'],
             json['power'])
+    
+    def update_all_data(self, tracker_beacon):
+        """update all data of the tracker beacon from a new object"""
+        self._name = tracker_beacon.name
+        self._created_at = tracker_beacon.created_at
+        self._updated_at = tracker_beacon.updated_at
+        self._mac_address = tracker_beacon.mac_address
+        self._battery_level = tracker_beacon.battery_level
+        self._last_battery_level_update = tracker_beacon.last_battery_level_update
+        self._sleep_delay = tracker_beacon.sleep_delay
+        self._is_updated = tracker_beacon.is_updated
+        self._power = tracker_beacon.power
+
 
 class GeoRideSubscription:
     """ Account object representation """ 
@@ -926,6 +977,22 @@ class GeoRideSubscription_CardInfo:
         self._expiry = expiry
         self._brand = brand
    
+    @property
+    def last_digits(self):
+        """last_digits property"""
+        return self._last_digits
+
+    @property
+    def expiry(self):
+        """expiry property"""
+        return self._expiry
+
+    @property
+    def brand(self):
+        """brand property"""
+        return self._brand
+
+
     @classmethod
     def from_json(cls, json):
         """return new object from_json"""
@@ -1044,95 +1111,3 @@ class GeoRideUser: # pylint: disable= R0902
             json['legal'],
             json['dateOfBirth']
         )
-
-#TODO: remove in v0.8.0
-class GeorideSharedTrip(GeoRideSharedTrip):
-    """ Shared trip object representation """
-
-    def __init_subclass__(cls, **kwargs):
-        """Print deprecation warning."""
-        super().__init_subclass__(**kwargs)
-        _LOGGER.warning(
-            "GeorideSharedTrip is deprecated, modify %s to use GeoRideSharedTrip",
-            cls.__name__,
-        )
-
-    def __init__(self, *argv):
-        """Print deprecation warning."""
-        super().__init__(*argv)
-        _LOGGER.warning("GeorideSharedTrip is deprecated, modify your code to use GeoRideSharedTrip")
-
-class GeorideTrackerTrip(GeoRideTrackerTrip):
-    """ Trip object representation """
-    def __init_subclass__(cls, **kwargs):
-        """Print deprecation warning."""
-        super().__init_subclass__(**kwargs)
-        _LOGGER.warning(
-            "GeorideTrackerTrip is deprecated, modify %s to use GeoRideTrackerTrip",
-            cls.__name__,
-        )
-    def __init__(self, *argv):
-        """Print deprecation warning."""
-        super().__init__(*argv)
-        _LOGGER.warning("GeorideTrackerTrip is deprecated, modify your code to use GeoRideTrackerTrip")
-
-class GeorideTrackerPosition(GeoRideTrackerPosition):
-    """ Trip object representation """
-    def __init_subclass__(cls, **kwargs):
-        """Print deprecation warning."""
-        super().__init_subclass__(**kwargs)
-        _LOGGER.warning(
-            "GeorideTrackerPosition is deprecated, modify %s to use GeoRideTrackerPosition",
-            cls.__name__,
-        )
-
-    def __init__(self, *argv):
-        """Print deprecation warning."""
-        super().__init__(*argv)
-        _LOGGER.warning("GeorideTrackerPosition is deprecated, modify your code to use GeoRideTrackerPosition")
-
-class GeorideTracker(GeoRideTracker):
-    """ Trip object representation """
-    def __init_subclass__(cls, **kwargs):
-        """Print deprecation warning."""
-        super().__init_subclass__(**kwargs)
-        _LOGGER.warning(
-            "GeorideTracker is deprecated, modify %s to use GeoRideTracker",
-            cls.__name__,
-        )
-
-    def __init__(self, *argv):
-        """Print deprecation warning."""
-        super().__init__(*argv)
-        _LOGGER.warning("GeorideTracker is deprecated, modify your code to use GeoRideTracker")
-
-
-class GeorideAccount(GeoRideAccount):
-    """ Trip object representation """
-    def __init_subclass__(cls, **kwargs):
-        """Print deprecation warning."""
-        super().__init_subclass__(**kwargs)
-        _LOGGER.warning(
-            "GeorideAccount is deprecated, modify %s to use GeoRideAccount",
-            cls.__name__,
-        )
-
-    def __init__(self, *argv):
-        """Print deprecation warning."""
-        super().__init__(*argv)
-        _LOGGER.warning("GeorideAccount is deprecated, modify your code to use GeoRideAccount")
-
-class GeorideUser(GeoRideUser):
-    """ Trip object representation """
-    def __init_subclass__(cls, **kwargs):
-        """Print deprecation warning."""
-        super().__init_subclass__(**kwargs)
-        _LOGGER.warning(
-            "GeorideUser is deprecated, modify %s to use GeoRideUser",
-            cls.__name__,
-        )
-
-    def __init__(self, *argv):
-        """Print deprecation warning."""
-        super().__init__(*argv)
-        _LOGGER.warning("GeorideUser is deprecated, modify your code to use GeoRideUser")

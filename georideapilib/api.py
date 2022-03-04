@@ -138,6 +138,7 @@ def get_tracker_beacon(token, tracker_id):
 
     response_data = response.json()
     if response.status_code == 200:
+        response_data['linked_tracker_id'] = tracker_id
         return GeoRideTrackerBeacon.from_json(response_data)
     else:
         return None
