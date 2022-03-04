@@ -13,7 +13,8 @@ from georideapilib.objects import (
     GeoRideUser,  
     GeoRideTrackerTrip,  
     GeoRideTrackerPosition, 
-    GeoRideSharedTrip
+    GeoRideSharedTrip,
+    GeoRideTrackerBeacon
 )
 
 from georideapilib.exception import (
