@@ -129,7 +129,7 @@ def get_trackers(token):
         trackers.append(GeoRideTracker.from_json(json_tracker))
     return trackers
 
-def get_tracker_beacon(token, tracker_id):
+def get_tracker_beacons(token, tracker_id):
     """ get user trackers """
 
     headers = {"Authorization": "Bearer " + token}
@@ -138,11 +138,13 @@ def get_tracker_beacon(token, tracker_id):
         headers=headers)
 
     response_data = response.json()
+    trackers_beacons = []
     if response.status_code == 200:
-        response_data['linked_tracker_id'] = tracker_id
-        return GeoRideTrackerBeacon.from_json(response_data)
-    else:
-        return None
+        for json_tracker_beacon in response_data:
+            _LOGGER.debug(json_tracker_beacon)
+            json_tracker_beacon['linked_tracker_id'] = tracker_id
+            trackers_beacons.append(GeoRideTrackerBeacon.from_json(json_tracker_beacon))
+    return trackers_beacons
 
 def get_trips(token, tracker_id, from_date, to_date):
     """ return all trips between two dates """
