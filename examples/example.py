@@ -28,10 +28,13 @@ def example():
     def locked_locked(data):
         _LOGGER.info("Lock received")
 
+    def refresh_tracker():
+        _LOGGER.info("Refresh tracker recieved")
 
     def connect_socket(account):
         socket = GeoRideSocket()
         socket.subscribe_locked(locked_locked)
+        socket.subscribe_refresh_tracker(refresh_tracker)
         socket.init()
         socket.connect(account.auth_token)
         time.sleep(10)
