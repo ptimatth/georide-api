@@ -112,19 +112,3 @@ class GeoRideSocket():
     def disconnect(self):
         """disconnect from the georide socket"""
         sio.disconnect()
-
-
-#TODO: remove in v0.8.0
-class GeorideSocket(GeoRideSocket):
-    """ Trip object representation """
-    def __init_subclass__(cls, **kwargs):
-        """Print deprecation warning."""
-        super().__init_subclass__(**kwargs)
-        _LOGGER.warning(
-            "GeorideSocket is deprecated, modify %s to use GeoRideSocket",
-            cls.__name__,
-        )
-    def __init__(self, *argv):
-        """Print deprecation warning."""
-        super().__init__(*argv)
-        _LOGGER.warning("GeorideSocket is deprecated, modify your code to use GeoRideSocket")

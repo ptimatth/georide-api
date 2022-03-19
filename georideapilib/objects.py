@@ -882,7 +882,7 @@ class GeoRideTrackerBeacon:
         self._power = tracker_beacon.power
 
 
-class GeoRideSubscription:
+class GeoRideSubscription(metaclass=JsonMgtMetaClass):
     """ Account object representation """ 
     def __init__(self, subscription_id, subscription_type, initial_date, next_payment_date,
                 status, paused_since, cancel_requested, price, first_name, last_name, card_information):
@@ -959,14 +959,14 @@ class GeoRideSubscription:
         return GeoRideSubscription(
             json['id'],
             json['type'],
-            json['initialDate'],
-            json['nextPaymentDate'],
-            json['status'],
-            json['pausedSince'],
-            json['cancelRequested'],
-            json['price'],
-            json['firstName'],
-            json['lastName'],
+            cls.json_field_protect(json, 'initialDate'),
+            cls.json_field_protect(json, 'nextPaymentDate'),
+            cls.json_field_protect(json, 'status'),
+            cls.json_field_protect(json, 'pausedSince'),
+            cls.json_field_protect(json, 'cancelRequested'),
+            cls.json_field_protect(json, 'price'),
+            cls.json_field_protect(json, 'firstName'),
+            cls.json_field_protect(json, 'lastName'),
             GeoRideSubscription_CardInfo.from_json(json['cardInformation'])
         )
 
