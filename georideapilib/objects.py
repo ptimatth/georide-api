@@ -956,6 +956,7 @@ class GeoRideSubscription(metaclass=JsonMgtMetaClass):
     @classmethod
     def from_json(cls, json):
         """return new object from_json"""
+        card_info = GeoRideSubscription_CardInfo.from_json(json['cardInformation']) if cls.json_field_protect(json, 'cardInformation', None) is not None else {}
         return GeoRideSubscription(
             json['id'],
             json['type'],
@@ -967,10 +968,10 @@ class GeoRideSubscription(metaclass=JsonMgtMetaClass):
             cls.json_field_protect(json, 'price'),
             cls.json_field_protect(json, 'firstName'),
             cls.json_field_protect(json, 'lastName'),
-            GeoRideSubscription_CardInfo.from_json(json['cardInformation'])
+            card_info
         )
 
-class GeoRideSubscription_CardInfo:
+class GeoRideSubscription_CardInfo(metaclass=JsonMgtMetaClass):
     """ Account object representation """ 
     def __init__(self, last_digits, expiry, brand):
         self._last_digits = last_digits
@@ -997,9 +998,9 @@ class GeoRideSubscription_CardInfo:
     def from_json(cls, json):
         """return new object from_json"""
         return GeoRideSubscription_CardInfo(
-            json['lastDigits'],
-            json['expiry'],
-            json['brand']
+            cls.json_field_protect(json, 'lastDigits'),
+            cls.json_field_protect(json, 'expiry'),
+            cls.json_field_protect(json, 'brand')
         )
 
 class GeoRideAccount:
