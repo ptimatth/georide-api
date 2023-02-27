@@ -485,13 +485,6 @@ class GeoRideTracker(metaclass=JsonMgtMetaClass): # pylint: disable=R0904,R0902
     @classmethod
     def from_json(cls, json):
         """return new object fromjson"""
-
-    "version": 3,
-    "eCallCrashMode": "default",
-    "assistanceTheftActivated": True,
-    "model": "georide-3",
-    "businessModel": "leasing",
-    "hasTheftCaseOpened": False,
     
         return GeoRideTracker(
             json['trackerId'], # Mandatory
