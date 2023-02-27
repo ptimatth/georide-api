@@ -11,7 +11,7 @@ class GeoRideAccount:
     """ Account object representation """ 
     def __init__(self, account_id, email, is_admin, auth_token):
         self._account_id = account_id
-        self._email = emailgit 
+        self._email = email
         self._is_admin = is_admin
         self._auth_token = auth_token
 
