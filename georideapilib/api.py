@@ -6,7 +6,6 @@ Georide api lib
 import json
 import logging
 import requests
-
 from georideapilib.objects import (
     GeoRideTracker, 
     GeoRideAccount, 
@@ -29,18 +28,18 @@ GEORIDE_API_ENDPOINT_NEW_TOKEN = "/user/new-token"
 GEORIDE_API_ENDPOINT_LOGOUT = "/user/logout"
 GEORIDE_API_ENDPOINT_USER = "/user"
 GEORIDE_API_ENDPOINT_TRACKERS = "/user/trackers"
-GEORIDE_API_ENDPOINT_TRIPS = "/tracker/:trackerId/trips"
-GEORIDE_API_ENDPOINT_LOCK = "/tracker/:trackerId/lock"
-GEORIDE_API_ENDPOINT_TRACKER_BEACON = "/tracker/:trackerId/beacon"
-GEORIDE_API_ENDPOINT_UNLOCK = "/tracker/:trackerId/unlock"
-GEORIDE_API_ENDPOINT_TOGGLE_LOCK = "/tracker/:trackerId/toggleLock"
-GEORIDE_API_ENDPOINT_POSITIONS = "/tracker/:trackerId/trips/positions"
-GEORIDE_API_ENDPOINT_TRIP_SHARE = "/tracker/:trackerId/share/trip"
-GEORIDE_API_ENDPOINT_SHUTDOWN_TRACKER = "/tracker/:trackerId/shutdown"
-GEORIDE_API_ENDPOINT_TRACKER_ALARM_OFF = "/tracker/:trackerId/sonor-alarm/off"
-GEORIDE_API_ENDPOINT_TRACKER_ALARM_ON = "/tracker/:trackerId/sonor-alarm/on"
-GEORIDE_API_ENDPOINT_TRACKER_ECO_MODE_OFF = "/tracker/:trackerId/eco-mode/off"
-GEORIDE_API_ENDPOINT_TRACKER_ECO_MODE_ON = "/tracker/:trackerId/eco-mode/on"
+GEORIDE_API_ENDPOINT_TRIPS = "/tracker/{trackerId}/trips"
+GEORIDE_API_ENDPOINT_LOCK = "/tracker/{trackerId}/lock"
+GEORIDE_API_ENDPOINT_TRACKER_BEACON = "/tracker/{trackerId}/beacon"
+GEORIDE_API_ENDPOINT_UNLOCK = "/tracker/{trackerId}/unlock"
+GEORIDE_API_ENDPOINT_TOGGLE_LOCK = "/tracker/{trackerId}/toggleLock"
+GEORIDE_API_ENDPOINT_POSITIONS = "/tracker/{trackerId}/trips/positions"
+GEORIDE_API_ENDPOINT_TRIP_SHARE = "/tracker/{trackerId}/share/trip"
+GEORIDE_API_ENDPOINT_SHUTDOWN_TRACKER = "/tracker/{trackerId}/shutdown"
+GEORIDE_API_ENDPOINT_TRACKER_ALARM_OFF = "/tracker/{trackerId}/sonor-alarm/off"
+GEORIDE_API_ENDPOINT_TRACKER_ALARM_ON = "/tracker/{trackerId}/sonor-alarm/on"
+GEORIDE_API_ENDPOINT_TRACKER_ECO_MODE_OFF = "/tracker/{trackerId}/eco-mode/off"
+GEORIDE_API_ENDPOINT_TRACKER_ECO_MODE_ON = "/tracker/{trackerId}/eco-mode/on"
 
 _SESSION = requests.Session()
 _LOGGER = logging.getLogger(__name__)
@@ -97,7 +96,7 @@ def revoke_token(token):
     if response.status_code == 401:
         _LOGGER.warnning("Token allready revoked")
         raise UnauthorizedException(revoke_token, "Token allready revoked")
-    if response.status_code == 401:
+    if response.status_code == 403:
         _LOGGER.warnning("Token allready revoked")
         return False
     return True
@@ -134,7 +133,7 @@ def get_tracker_beacons(token, tracker_id):
 
     headers = {"Authorization": "Bearer " + token}
     response = _SESSION.get(
-        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_TRACKER_BEACON.replace(':trackerId', str(tracker_id)),
+        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_TRACKER_BEACON.format(trackerId=str(tracker_id)),
         headers=headers)
 
     response_data = response.json()
@@ -150,28 +149,30 @@ def get_trips(token, tracker_id, from_date, to_date):
     """ return all trips between two dates """
     headers = {"Authorization": "Bearer " + token}
     response = _SESSION.get(
-        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_TRIPS.replace(':trackerId', str(tracker_id)),
+        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_TRIPS.format(trackerId=str(tracker_id)),
         params={'from': from_date, 'to': to_date},
         headers=headers)
 
     response_data = response.json()
     trips = []
-    for json_trip in response_data:
-        trips.append(GeoRideTrackerTrip.from_json(json_trip))
+    if response.status_code == 200:
+        for json_trip in response_data:
+            trips.append(GeoRideTrackerTrip.from_json(json_trip))
     return trips
 
 def get_positions(token, tracker_id, from_date, to_date):
     """ return all trips between two dates """
     headers = {"Authorization": "Bearer " + token}
     response = _SESSION.get(
-        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_POSITIONS.replace(':trackerId', str(tracker_id)),
+        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_POSITIONS.format(trackerId=str(tracker_id)),
         params={'from': from_date, 'to': to_date},
         headers=headers)
 
     response_data = response.json()
     positions = []
-    for json_position in response_data:
-        positions.append(GeoRideTrackerPosition.from_json(json_position))
+    if response.status_code == 200:
+        for json_position in response_data:
+            positions.append(GeoRideTrackerPosition.from_json(json_position))
     return positions
 
 def share_a_trip_by_trip_id(token, tracker_id, trip_id):
@@ -204,18 +205,20 @@ def _share_a_trip(token, tracker_id, trip_id=None, from_date=None, # pylint: dis
         'Content-Type': 'application/json'
     }
     response = _SESSION.post(
-        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_TRIP_SHARE.replace(':trackerId', str(tracker_id)),
+        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_TRIP_SHARE.format(trackerId=str(tracker_id)),
         data=encoded_data,
         headers=headers)
 
     response_data = response.json()
-    return GeoRideSharedTrip.from_json(response_data)
+    if response.status_code == 200:
+        return GeoRideSharedTrip.from_json(response_data)
+    return None
 
 def lock_tracker(token, tracker_id):
     """ used to lock a tracker """
     headers = {"Authorization": "Bearer " + token}
     response = _SESSION.post(
-        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_LOCK.replace(':trackerId', str(tracker_id)),
+        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_LOCK.format(trackerId=str(tracker_id)),
         headers=headers)
     if response.status_code != 204:
         return False
@@ -225,7 +228,7 @@ def unlock_tracker(token, tracker_id):
     """ used to unlock a tracker """
     headers = {"Authorization": "Bearer " + token}
     response = _SESSION.post(
-        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_UNLOCK.replace(':trackerId', str(tracker_id)),
+        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_UNLOCK.format(trackerId=str(tracker_id)),
         headers=headers)
     if response.status_code != 204:
         return False
@@ -235,7 +238,7 @@ def toogle_lock_tracker(token, tracker_id):
     """ used to toggle lock a tracker """
     headers = {"Authorization": "Bearer " + token}
     response = _SESSION.post(
-        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_TOGGLE_LOCK.replace(':trackerId', str(tracker_id)),
+        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_TOGGLE_LOCK.format(trackerId=str(tracker_id)),
         headers=headers)
     response_data = response.json()
     return response_data['locked']
@@ -246,11 +249,11 @@ def change_tracker_siren_state(token, tracker_id, state: bool):
     response = None
     if state == True:
         response = _SESSION.post(
-            GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_TRACKER_ALARM_ON.replace(':trackerId', str(tracker_id)),
+            GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_TRACKER_ALARM_ON.format(trackerId=str(tracker_id)),
             headers=headers)
     else:
         response = _SESSION.post(
-            GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_TRACKER_ALARM_OFF.replace(':trackerId', str(tracker_id)),
+            GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_TRACKER_ALARM_OFF.format(trackerId=str(tracker_id)),
             headers=headers)
     if response.status_code != 204:
         return False
@@ -262,11 +265,11 @@ def change_tracker_eco_mode_state(token, tracker_id, state: bool):
     response = None
     if state == True:
         response = _SESSION.post(
-            GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_TRACKER_ECO_MODE_ON.replace(':trackerId', str(tracker_id)),
+            GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_TRACKER_ECO_MODE_ON.format(trackerId=str(tracker_id)),
             headers=headers)
     else:
         response = _SESSION.post(
-            GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_TRACKER_ECO_MODE_OFF.replace(':trackerId', str(tracker_id)),
+            GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_TRACKER_ECO_MODE_OFF.format(trackerId=str(tracker_id)),
             headers=headers)
     if response.status_code != 204:
         return False
@@ -276,10 +279,12 @@ def shutdown_tracker(token, tracker_id):
     """ used to toggle lock a tracker """
     headers = {"Authorization": "Bearer " + token}
     response = _SESSION.post(
-        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_SHUTDOWN_TRACKER.replace(':trackerId', str(tracker_id)),
+        GEORIDE_API_HOST + GEORIDE_API_ENDPOINT_SHUTDOWN_TRACKER.format(trackerId=str(tracker_id)),
         headers=headers)
     response_data = response.json()
-    return response_data['locked']
+    if response.status_code == 200:
+        return response_data['locked']
+    return None
 
 if __name__ == '__main__':
     print("Not a main module")

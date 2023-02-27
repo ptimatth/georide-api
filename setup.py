@@ -18,8 +18,8 @@ CURRENT_DIR = os.path.dirname(__file__)
 # "python setup.py register sdist upload -r pypitest"
 setup(
     name='georideapilib',
-    packages=['georideapilib'],  # this must be the same as the name above
-    version='0.8.4',
+    packages=['georideapilib', 'georideapilib.objects'],  # this must be the same as the name above
+    version='0.9.0',
     description='Lib to control GeoRide tracker devices with theire rest api',
     author='Matthieu DUVAL',
     author_email='georideapilib@duval-dev.fr',
