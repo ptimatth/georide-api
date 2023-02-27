@@ -543,7 +543,12 @@ class GeoRideTracker(metaclass=JsonMgtMetaClass): # pylint: disable=R0904,R0902
             cls.json_field_protect(json,'softwareVersion', 1),
             cls.json_field_protect(json,'hasBeacon', False),
             cls.json_field_protect(json,'hasOutdatedBeacons', False),
-            cls.json_field_protect(json,'eCallActivated', False)
+            cls.json_field_protect(json,'eCallActivated', False),
+            cls.json_field_protect(json,'eCallCrashMode'),
+            cls.json_field_protect(json,'assistanceTheftActivated'),
+            cls.json_field_protect(json,'model'),
+            cls.json_field_protect(json,'businessModel'),
+            cls.json_field_protect(json,'hasTheftCaseOpened'),
         )
 
     def update_all_data(self, tracker):
