@@ -462,7 +462,7 @@ class GeoRideTracker(metaclass=JsonMgtMetaClass): # pylint: disable=R0904,R0902
         return self._ecall_crash_mode
 
     @property
-    def _ssistance_theft_activated(self):
+    def assistance_theft_activated(self):
         """ assistanceTheftActivated property """
         return self._assistance_theft_activated
 
