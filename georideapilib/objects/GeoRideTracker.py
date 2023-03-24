@@ -495,26 +495,26 @@ class GeoRideTracker(metaclass=JsonMgtMetaClass): # pylint: disable=R0904,R0902
             cls.json_field_protect(json,'isOldTracker', False),
             cls.json_field_protect(json,'autoLockFreezedTo'),
             cls.json_field_protect(json,'fixtime'),
-            json['role'], # Mandatory
-            json['lastPaymentDate'],# Mandatory
+            cls.json_field_protect(json,'role', "owner"),
+            cls.json_field_protect(json,'lastPaymentDate', null),
             cls.json_field_protect(json,'giftCardId'),
             cls.json_field_protect(json,'expires'),
             cls.json_field_protect(json,'activationDate'),
-            json['odometer'],#Mandatory
+            cls.json_field_protect(json,'odometer', False),
             cls.json_field_protect(json,'isStolen', False),
             cls.json_field_protect(json,'isCrashed', False),
             cls.json_field_protect(json,'crashDetectionDisabled'),
-            json['speed'], # Mandatory
-            json['moving'], # Mandatory
+            cls.json_field_protect(json,'speed', 0), # Mandatory
+            cls.json_field_protect(json,'moving', False),
             cls.json_field_protect(json,'positionId', -1),
-            json['latitude'], # Mandatory
-            json['longitude'], # Mandatory
+            cls.json_field_protect(json,'latitude', 47.0),
+            cls.json_field_protect(json,'longitude', -1.0),
             cls.json_field_protect(json,'altitude', 0),
             cls.json_field_protect(json,'lockedPositionId'),
             cls.json_field_protect(json,'lockedLatitude'),
             cls.json_field_protect(json,'lockedLongitude'),
-            json['isLocked'], # Mandatory
-            json['canSeePosition'],# Mandatory
+            cls.json_field_protect(json,'isLocked', False),
+            cls.json_field_protect(json,'canSeePosition', False),
             cls.json_field_protect(json,'canLock', False),
             cls.json_field_protect(json,'canUnlock', False),
             cls.json_field_protect(json,'canShare', False),
@@ -523,7 +523,7 @@ class GeoRideTracker(metaclass=JsonMgtMetaClass): # pylint: disable=R0904,R0902
             cls.json_field_protect(json,'canSeeStatistics', False),
             cls.json_field_protect(json,'canSendBrokenDownSignal', False),
             cls.json_field_protect(json,'canSendStolenSignal', False),
-            json['status'],# Mandatory
+            cls.json_field_protect(json,'status', 'unknown'),
             cls.json_field_protect(json,'subscriptionId', -1),
             cls.json_field_protect(json,'externalBatteryVoltage', -1.0),
             cls.json_field_protect(json,'internalBatteryVoltage', -1.0),
