@@ -496,7 +496,7 @@ class GeoRideTracker(metaclass=JsonMgtMetaClass): # pylint: disable=R0904,R0902
             cls.json_field_protect(json,'autoLockFreezedTo'),
             cls.json_field_protect(json,'fixtime'),
             cls.json_field_protect(json,'role', "owner"),
-            cls.json_field_protect(json,'lastPaymentDate', null),
+            cls.json_field_protect(json,'lastPaymentDate', None),
             cls.json_field_protect(json,'giftCardId'),
             cls.json_field_protect(json,'expires'),
             cls.json_field_protect(json,'activationDate'),
