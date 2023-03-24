@@ -19,7 +19,7 @@ CURRENT_DIR = os.path.dirname(__file__)
 setup(
     name='georideapilib',
     packages=['georideapilib', 'georideapilib.objects'],  # this must be the same as the name above
-    version='0.9.5',
+    version='0.9.6',
     description='Lib to control GeoRide tracker devices with theire rest api',
     author='Matthieu DUVAL',
     author_email='georideapilib@duval-dev.fr',
