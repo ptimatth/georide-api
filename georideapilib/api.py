@@ -22,7 +22,8 @@ from georideapilib.exception import (
     UnauthorizedException
 )
 
-GEORIDE_API_HOST = "https://api.georide.fr"
+GEORIDE_API_HOST = "https://api.georide.com"
+GEORIDE_SOCKET_HOST = "https://socket.georide.com"
 GEORIDE_API_ENDPOINT_LOGIN = "/user/login"
 GEORIDE_API_ENDPOINT_NEW_TOKEN = "/user/new-token"
 GEORIDE_API_ENDPOINT_LOGOUT = "/user/logout"
