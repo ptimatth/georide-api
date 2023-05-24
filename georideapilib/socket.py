@@ -2,7 +2,7 @@
 import logging
 import socketio
 
-from georideapilib.api import GEORIDE_API_HOST
+from georideapilib.api import GEORIDE_SOCKET_HOST
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -104,7 +104,7 @@ class GeoRideSocket():
     def connect(self, auth_token):
         """ connect to the georide socket"""
         if self._initialised is not False:
-            sio.connect(GEORIDE_API_HOST, headers={'token': auth_token})
+            sio.connect(GEORIDE_SOCKET_HOST, headers={'token': auth_token})
             sio.wait()
         else:
             _LOGGER.error("Please call init() before")
