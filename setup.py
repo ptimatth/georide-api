@@ -28,7 +28,7 @@ setup(
     download_url='https://codeload.github.com/hacf/georide-api/tar.gz/1.0.0',
     keywords=['rest', 'georide', 'api', 'grutier', 'GeoRide'],  # arbitrary keywords
     classifiers=[],
-    install_requires=["python-socketio[client]==5.8.0"],
+    install_requires=["python-socketio[client]==4.6.1"],
     tests_require=[
         'pytest>=3.7',
         'pytest-pep8',  
