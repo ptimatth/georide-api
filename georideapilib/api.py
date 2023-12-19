@@ -21,7 +21,7 @@ from georideapilib.objects import (
     GeoRideTrackerPosition,
     GeoRideSharedTrip,
     GeoRideTrackerBeacon,
-    GeorideMaintenance
+    GeoRideMaintenance
 )
 
 GEORIDE_API_HOST = "https://api.georide.com"
@@ -88,7 +88,7 @@ def renew_token(token):
         response_data = response.json()
         new_token = response_data['authToken']
     elif response.status_code == 401:
-        _LOGGER.warnning("Renew token refused")
+        _LOGGER.warning("Renew token refused")
         raise UnauthorizedException(renew_token, "Renew token refused")
     else:
         _LOGGER.error("Georide login, http error code: %s", response.status_code)
@@ -105,10 +105,10 @@ def revoke_token(token):
         token
     )
     if response.status_code == 401:
-        _LOGGER.warnning("Token allready revoked")
+        _LOGGER.warning("Token already revoked")
         raise UnauthorizedException(revoke_token, "Token allready revoked")
     if response.status_code == 403:
-        _LOGGER.warnning("Token allready revoked")
+        _LOGGER.warning("Token already revoked")
         return False
     return True
 
@@ -299,16 +299,16 @@ def change_tracker_eco_mode_state(token, tracker_id, state: bool):
     return True
 
 
-def add_or_update_maintenance(token, tracker_id, maintenance: GeorideMaintenance):
+def add_or_update_maintenance(token, tracker_id, maintenance_json):
     """ used to add or update a maintenance """
     response = _send_request(
         "POST",
         GEORIDE_API_ENDPOINT_TRACKER_MAINTENANCE.format(trackerId=str(tracker_id)),
         token,
-        data=maintenance
+        data=maintenance_json
     )
 
-    if response.status_code == 200:
+    if response.status_code == 204:
         return True
     return False
 
@@ -324,7 +324,7 @@ def delete_maintenance(token, tracker_id, maintenance_id):
         token
     )
 
-    if response.status_code == 200:
+    if response.status_code == 204:
         return True
     return False
 
@@ -340,8 +340,8 @@ def get_maintenances_for_tracker(token, tracker_id):
     response_data = response.json()
     maintenances = []
     if response.status_code == 200:
-        for maint in response_data['maintenanceList']:
-            maintenances.append(GeorideMaintenance.from_json(maint))
+        for maintenance in response_data['maintenanceList']:
+            maintenances.append(GeoRideMaintenance.from_json(maintenance))
         return maintenances
     else:
         return None
