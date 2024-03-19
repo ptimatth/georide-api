@@ -8,5 +8,5 @@ from .GeoRideTrackerBeacon import *
 from .GeoRideTrackerPosition import *
 from .GeoRideTrackerTrip import *
 from .GeoRideUser import *
-from .GeorideMaintenance import *
+from .GeoRideMaintenance import *
 
