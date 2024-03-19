@@ -6,7 +6,7 @@ from georideapilib.api import GEORIDE_SOCKET_HOST
 
 _LOGGER = logging.getLogger(__name__)
 
-sio = socketio.Client(reconnection=True) # pylint: disable=C0103
+sio = socketio.Client(reconnection=True, reconnection_attempts=5, reconnection_delay=1000, reconnection_delay_max=5000, randomization_factor=0.5) # pylint: disable=C0103
 
 @sio.on('connect')
 def on_connect():
@@ -106,6 +106,7 @@ class GeoRideSocket():
         if self._initialised is not False:
             sio.connect(GEORIDE_SOCKET_HOST, headers={'token': auth_token})
             sio.wait()
+
         else:
             _LOGGER.error("Please call init() before")
         
