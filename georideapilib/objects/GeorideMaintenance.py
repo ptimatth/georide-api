@@ -4,7 +4,7 @@ import logging
 _LOGGER = logging.getLogger(__name__)
 
 
-class GeorideMaintenance:
+class GeoRideMaintenance:
 
     def __init__(self,
                  name,
@@ -75,18 +75,26 @@ class GeorideMaintenance:
             "lastMaintenanceDistance": self.lastMaintenanceDistance
         }).encode("utf-8")
 
+    def to_date_maintenance_json(self):
+        return json.dumps({
+            "name": self.name,
+            "everyMaintenance": self.everyMaintenance,
+            "lastMaintenanceDate": self.lastMaintenanceDate,
+            "dateUnitType": self.dateUnitType
+        }).encode("utf-8")
+
     @staticmethod
-    def from_json(json):
+    def from_json(json_obj):
         """return new object fromjson"""
-        return GeorideMaintenance(
-            name=json['name'],
-            id=json['id'],
-            todo=json['todo'],
-            trackerId=json['trackerId'],
-            lastMaintenanceDistance=json['lastMaintenanceDistance'],
-            lastMaintenanceDate=json['lastMaintenanceDate'],
-            dateUnitType=json['dateUnitType'],
-            everyMaintenance=json['everyMaintenance'],
-            createdAt=json['createdAt'],
-            updatedAt=json['updatedAt']
+        return GeoRideMaintenance(
+            name=json_obj['name'],
+            id=json_obj['id'],
+            todo=json_obj['todo'],
+            trackerId=json_obj['trackerId'],
+            lastMaintenanceDistance=json_obj['lastMaintenanceDistance'],
+            lastMaintenanceDate=json_obj['lastMaintenanceDate'],
+            dateUnitType=json_obj['dateUnitType'],
+            everyMaintenance=json_obj['everyMaintenance'],
+            createdAt=json_obj['createdAt'],
+            updatedAt=json_obj['updatedAt']
         )
